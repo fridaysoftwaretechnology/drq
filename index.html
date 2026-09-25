@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <title>Dar-e-Arqam School | Campus Management</title>
     <style>
         :root {
@@ -557,7 +558,7 @@
             margin-bottom: 4px;
         }
 
-        .dev-info-card strong, 
+        .dev-info-card strong,
         .dev-info-card a {
             font-size: 13px;
             color: #1a1a1a;
@@ -587,6 +588,8 @@
             font-size: 12px;
             font-weight: 800;
             text-decoration: none;
+            border: 0;
+            cursor: pointer;
             transition: all 0.25s ease;
         }
 
@@ -756,7 +759,9 @@
         }
 
         @media(max-width:560px) {
-            .form-grid, .dev-info-grid {
+
+            .form-grid,
+            .dev-info-grid {
                 grid-template-columns: 1fr
             }
 
@@ -811,7 +816,8 @@
         <section class="brand">
             <div class="brand-content">
                 <div class="logo">
-                    <img src="drq.png" alt="Dar-e-Arqam" style="width:100%;height:100%;object-fit:contain;border-radius:12px">
+                    <img src="drq.png" alt="Dar-e-Arqam"
+                        style="width:100%;height:100%;object-fit:contain;border-radius:12px">
                 </div>
                 <h1>Dar-e-Arqam School</h1>
                 <p>Modern educational management system for campuses, principals, teachers and administration.</p>
@@ -866,7 +872,8 @@
                     <div class="group">
                         <label for="loginPassword">Campus Password <span class="required">*</span></label>
                         <div class="input-wrap">
-                            <input id="loginPassword" class="password" type="password" autocomplete="current-password" placeholder="Enter campus password" required>
+                            <input id="loginPassword" class="password" type="password" autocomplete="current-password"
+                                placeholder="Enter campus password" required>
                             <button class="show" type="button" data-target="loginPassword">Show</button>
                         </div>
                     </div>
@@ -902,8 +909,10 @@
                         </div>
 
                         <div class="group">
-                            <label for="supervisorName">Principal / Administrator <span class="required">*</span></label>
-                            <input id="supervisorName" name="supervisorName" placeholder="Supervisor full name" required>
+                            <label for="supervisorName">Principal / Administrator <span
+                                    class="required">*</span></label>
+                            <input id="supervisorName" name="supervisorName" placeholder="Supervisor full name"
+                                required>
                         </div>
 
                         <div class="group full">
@@ -924,7 +933,8 @@
                         <div class="group full">
                             <label for="createPassword">Create Password <span class="required">*</span></label>
                             <div class="input-wrap">
-                                <input id="createPassword" name="password" class="password" type="password" minlength="6" placeholder="Minimum 6 characters" required>
+                                <input id="createPassword" name="password" class="password" type="password"
+                                    minlength="6" placeholder="Minimum 6 characters" required>
                                 <button class="show" type="button" data-target="createPassword">Show</button>
                             </div>
                         </div>
@@ -976,12 +986,13 @@
                 </div>
 
                 <div class="dev-action-buttons">
-                    <a class="dev-btn dev-btn-whatsapp" href="https://wa.me/923079576974" target="_blank" rel="noopener noreferrer">
+                    <a class="dev-btn dev-btn-whatsapp" href="https://wa.me/923079576974" target="_blank"
+                        rel="noopener noreferrer">
                         WhatsApp Direct Support
                     </a>
-                    <a class="dev-btn dev-btn-portal" href="https://fridaysoftwaretechnology.github.io/admin/" target="_blank" rel="noopener noreferrer">
+                    <button class="dev-btn dev-btn-portal" id="portalAdminBtn" type="button">
                         Portal Admin Panel
-                    </a>
+                    </button>
                 </div>
 
                 <div class="helper">
@@ -1035,6 +1046,11 @@
         registerTab.addEventListener("click", () => showView("register"));
         developerTab.addEventListener("click", () => showView("developer"));
         $("devInfoBtn").addEventListener("click", () => showView("developer"));
+
+        /* Navigation to Admin Portal in same window */
+        $("portalAdminBtn").addEventListener("click", () => {
+            window.location.href = "https://fridaysoftwaretechnology.github.io/admin/";
+        });
 
         document.querySelectorAll(".switch").forEach(button => {
             button.addEventListener("click", () => {
