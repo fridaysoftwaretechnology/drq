@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dar-E-Arqam School Management Software</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .voucher-bg {
+            background-image: url('drq.png');
+            background-size: 400px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.9;
+        }
+
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+
+        body.modal-active {
+            overflow-x: hidden;
+            overflow-y: visible !important;
+        }
+
+        .sidebar-link {
+            transition: all 0.2s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #ffd700;
+        }
+
+        /* Print styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            .print-only {
+                display: block !important;
+            }
+
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Sidebar -->
+    <aside
+        class="fixed inset-y-0 left-0 w-64 bg-emerald-800 text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30"
+        id="sidebar">
+        <div class="p-6 border-b border-emerald-700 flex items-center gap-3">
+            <img src="drq.png" alt="DRQ Logo" class="h-10 w-10 rounded-full bg-white p-1 object-contain">
+            <div>
+                <h1 class="font-bold text-lg leading-tight">Dar-E-Arqam</h1>
+                <p class="text-xs text-emerald-200">School Management</p>
+            </div>
+        </div>
+        <nav class="mt-6 px-2 space-y-1">
+            <a href="#" onclick="showView('dashboard')"
+                class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-home w-5"></i> Dashboard</a>
+            <a href="#" onclick="showView('students')"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-user-graduate w-5"></i> Students</a>
+            <a href="#" onclick="showView('staff')"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-chalkboard-teacher w-5"></i> Staff</a>
+            <a href="#" onclick="showView('fees')"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-money-bill-wave w-5"></i> Fee Collection</a>
+            <a href="#" onclick="showView('expenses')"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-file-invoice-dollar w-5"></i> Expenses</a>
+            <a href="#" onclick="showView('assets')"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-building w-5"></i> Assets</a>
+            <a href="#" onclick="showView('reports')"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-chart-bar w-5"></i> Reports & Vouchers</a>
+            <a href="#" onclick="showView('settings')"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium"><i
+                    class="fas fa-cog w-5"></i> Settings</a>
+            <a href="https://fridaysoftwaretechnology.github.io/admin/"
+                class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium text-yellow-300 hover:text-yellow-100"><i
+                    class="fas fa-code w-5"></i> Developer / About</a>
+        </nav>
+        <div class="absolute bottom-0 w-full p-4 border-t border-emerald-700">
+            <button onclick="window.location.href='https://fridaysoftwaretechnology.github.io/admin/'"
+                class="w-full bg-emerald-900 hover:bg-emerald-950 text-white py-2 px-4 rounded-md text-sm font-medium transition">
+                <i class="fas fa-external-link-alt mr-2"></i> About Developer
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="md:ml-64 min-h-screen flex flex-col">
+        <!-- Top Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-20 px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')"
+                    class="md:hidden text-gray-600"><i class="fas fa-bars text-xl"></i></button>
+                <h2 class="text-xl font-semibold text-gray-800" id="page-title">Dashboard</h2>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-gray-500 hidden sm:inline">Branch: <span id="current-branch"
+                        class="font-semibold text-emerald-700">Loading...</span></span>
+                <button onclick="loadData()" class="p-2 text-gray-600 hover:text-emerald-600" title="Reload Data"><i
+                        class="fas fa-sync-alt"></i></button>
+                <button onclick="saveData()"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2">
+                    <i class="fas fa-save"></i> <span class="hidden sm:inline">Save Data</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Views -->
+        <div class="flex-1 p-6 overflow-y-auto">
+
+            <!-- Dashboard View -->
+            <div id="view-dashboard" class="view-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Total Students</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2" id="dash-total-students">0</h3>
+                                <p class="text-xs text-emerald-600 mt-1"><span id="dash-active-students">0</span> Active
+                                </p>
+                            </div>
+                            <div class="p-3 bg-blue-50 text-blue-600 rounded-lg"><i
+                                    class="fas fa-user-graduate text-xl"></i></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Total Staff</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2" id="dash-total-staff">0</h3>
+                            </div>
+                            <div class="p-3 bg-purple-50 text-purple-600 rounded-lg"><i
+                                    class="fas fa-chalkboard-teacher text-xl"></i></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Fees Collected (This Month)</p>
+                                <h3 class="text-3xl font-bold text-emerald-600 mt-2">Rs. <span
+                                        id="dash-fees-collected">0</span></h3>
+                            </div>
+                            <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg"><i
+                                    class="fas fa-money-bill-wave text-xl"></i></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium">Net Position</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2">Rs. <span
+                                        id="dash-net-position">0</span></h3>
+                                <p class="text-xs text-gray-500 mt-1">Fees - Expenses</p>
+                            </div>
+                            <div class="p-3 bg-orange-50 text-orange-600 rounded-lg"><i
+                                    class="fas fa-chart-line text-xl"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-4">Recent Fee Collections</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3">Date</th>
+                                        <th class="px-4 py-3">Student</th>
+                                        <th class="px-4 py-3">Month</th>
+                                        <th class="px-4 py-3 text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-recent-fees"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-4">Recent Expenses</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-500 uppercase bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3">Date</th>
+                                        <th class="px-4 py-3">Category</th>
+                                        <th class="px-4 py-3">Description</th>
+                                        <th class="px-4 py-3 text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-recent-expenses"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students View -->
+            <div id="view-students" class="view-section hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <input type="text" id="search-students" placeholder="Search students..."
+                            class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full sm:w-64"
+                            onkeyup="renderStudents()">
+                        <select id="filter-student-class"
+                            class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                            onchange="renderStudents()">
+                            <option value="">All Classes</option>
+                            <option value="Play">Play</option>
+                            <option value="Nursery">Nursery</option>
+                            <option value="KG">KG</option>
+                            <option value="1">Class 1</option>
+                            <option value="2">Class 2</option>
+                            <option value="3">Class 3</option>
+                            <option value="4">Class 4</option>
+                            <option value="5">Class 5</option>
+                            <option value="6">Class 6</option>
+                            <option value="7">Class 7</option>
+                            <option value="8">Class 8</option>
+                            <option value="9">Class 9</option>
+                            <option value="10">Class 10</option>
+                        </select>
+                        <select id="filter-student-status"
+                            class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                            onchange="renderStudents()">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Suspended">Suspended</option>
+                            <option value="Deleted">Deleted</option>
+                        </select>
+                    </div>
+                    <button onclick="openModal('modal-student')"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Add Student
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-4">Name</th>
+                                    <th class="px-6 py-4">Father Name</th>
+                                    <th class="px-6 py-4">Class & Sec</th>
+                                    <th class="px-6 py-4">Phone</th>
+                                    <th class="px-6 py-4">Monthly Fee</th>
+                                    <th class="px-6 py-4">Status</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-students" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff View -->
+            <div id="view-staff" class="view-section hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <input type="text" id="search-staff" placeholder="Search staff..."
+                        class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full sm:w-64"
+                        onkeyup="renderStaff()">
+                    <button onclick="openModal('modal-staff')"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Add Staff
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-4">Name</th>
+                                    <th class="px-6 py-4">Designation</th>
+                                    <th class="px-6 py-4">Subject</th>
+                                    <th class="px-6 py-4">Phone</th>
+                                    <th class="px-6 py-4">Salary</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-staff" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fees View -->
+            <div id="view-fees" class="view-section hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <input type="text" id="search-fees" placeholder="Search fees..."
+                            class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full sm:w-64"
+                            onkeyup="renderFees()">
+                        <select id="filter-fee-month"
+                            class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                            onchange="renderFees()">
+                            <option value="">All Months</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                    <button onclick="openModal('modal-fee')"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Collect Fee
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-4">Date</th>
+                                    <th class="px-6 py-4">Student</th>
+                                    <th class="px-6 py-4">Month/Year</th>
+                                    <th class="px-6 py-4">Description</th>
+                                    <th class="px-6 py-4">Amount</th>
+                                    <th class="px-6 py-4">Method</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-fees" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses View -->
+            <div id="view-expenses" class="view-section hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <input type="text" id="search-expenses" placeholder="Search expenses..."
+                        class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full sm:w-64"
+                        onkeyup="renderExpenses()">
+                    <button onclick="openModal('modal-expense')"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Add Expense
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-4">Date</th>
+                                    <th class="px-6 py-4">Category</th>
+                                    <th class="px-6 py-4">Description</th>
+                                    <th class="px-6 py-4">Amount</th>
+                                    <th class="px-6 py-4">Method</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-expenses" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assets View -->
+            <div id="view-assets" class="view-section hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <input type="text" id="search-assets" placeholder="Search assets..."
+                        class="border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none w-full sm:w-64"
+                        onkeyup="renderAssets()">
+                    <button onclick="openModal('modal-asset')"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Add Asset
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-4">Name</th>
+                                    <th class="px-6 py-4">Category</th>
+                                    <th class="px-6 py-4">Purchase Date</th>
+                                    <th class="px-6 py-4">Cost</th>
+                                    <th class="px-6 py-4">Condition</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-assets" class="divide-y divide-gray-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports View -->
+            <div id="view-reports" class="view-section hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer"
+                        onclick="generateReport('students')">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="p-3 bg-blue-100 text-blue-600 rounded-lg"><i class="fas fa-users text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Student Report</h3>
+                        </div>
+                        <p class="text-sm text-gray-500">Complete list of students with fee structures and contact
+                            details.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer"
+                        onclick="generateReport('fees')">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg"><i
+                                    class="fas fa-money-check-alt text-xl"></i></div>
+                            <h3 class="font-semibold text-gray-800">Fee Collection Report</h3>
+                        </div>
+                        <p class="text-sm text-gray-500">Detailed record of all fee collections, pending amounts, and
+                            monthly summaries.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer"
+                        onclick="generateReport('financial')">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="p-3 bg-purple-100 text-purple-600 rounded-lg"><i
+                                    class="fas fa-chart-pie text-xl"></i></div>
+                            <h3 class="font-semibold text-gray-800">Financial Summary</h3>
+                        </div>
+                        <p class="text-sm text-gray-500">Compare total income (fees) vs total expenses and calculate net
+                            position.</p>
+                    </div>
+                </div>
+
+                <!-- Report Output Area -->
+                <div id="report-output" class="hidden bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-6 no-print">
+                        <h3 class="text-xl font-bold text-gray-800" id="report-title">Report</h3>
+                        <div class="flex gap-2">
+                            <button onclick="exportToPNG('report-content')"
+                                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition"><i
+                                    class="fas fa-image mr-2"></i>Export PNG</button>
+                            <button onclick="exportToPDF('report-content')"
+                                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition"><i
+                                    class="fas fa-file-pdf mr-2"></i>Export PDF</button>
+                            <button onclick="window.print()"
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition"><i
+                                    class="fas fa-print mr-2"></i>Print</button>
+                        </div>
+                    </div>
+                    <div id="report-content"
+                        class="p-4 border border-gray-200 rounded-lg voucher-bg relative min-h-[400px]">
+                        <div class="bg-white/80 p-6 rounded-lg">
+                            <div class="text-center mb-6 border-b pb-4">
+                                <img src="drq.png" alt="Logo" class="h-16 mx-auto mb-2 object-contain">
+                                <h2 class="text-2xl font-bold text-emerald-800">Dar-E-Arqam School</h2>
+                                <p class="text-gray-600" id="report-subtitle">Official Report</p>
+                                <p class="text-sm text-gray-500 mt-1">Branch: <span id="report-branch"></span> | Date:
+                                    <span id="report-date"></span>
+                                </p>
+                            </div>
+                            <div id="report-data" class="overflow-x-auto"></div>
+                            <div class="mt-8 pt-4 border-t flex justify-between text-sm text-gray-500">
+                                <span>Generated by Dar-E-Arqam Management System</span>
+                                <span>Page 1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="view-settings" class="view-section hidden">
+                <div class="max-w-2xl bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">System Settings</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Branch / Campus</label>
+                            <input type="text" id="settings-branch"
+                                class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <p class="text-xs text-gray-500 mt-1">This determines the folder/file name used in
+                                sessionStorage and backend routes.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="updateBranch()"
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-md text-sm font-medium transition">Update
+                                Branch</button>
+                            <button onclick="downloadBackup()"
+                                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md text-sm font-medium transition"><i
+                                    class="fas fa-download mr-2"></i>Download JSON Backup</button>
+                            <label
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm font-medium transition cursor-pointer">
+                                <i class="fas fa-upload mr-2"></i>Restore Backup
+                                <input type="file" id="restore-file" class="hidden" accept=".json"
+                                    onchange="restoreBackup(this)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Student Modal -->
+    <div id="modal-student" class="modal fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title"
+        role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                onclick="closeModal('modal-student')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="modal-student-title">Add Student
+                    </h3>
+                    <form id="form-student" class="space-y-4">
+                        <input type="hidden" id="student-id">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="student-name" placeholder="Student Name *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <input type="text" id="student-father" placeholder="Father Name *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <select id="student-class" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                <option value="">Select Class *</option>
+                                <option value="Play">Play</option>
+                                <option value="Nursery">Nursery</option>
+                                <option value="KG">KG</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                            </select>
+                            <input type="text" id="student-section" placeholder="Section *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        </div>
+                        <input type="text" id="student-phone" placeholder="Phone Number"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <input type="text" id="student-address" placeholder="Address (Optional)"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <select id="student-status" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <option value="Active">Active</option>
+                            <option value="Suspended">Suspended</option>
+                            <option value="Deleted">Deleted</option>
+                        </select>
+                        <div class="grid grid-cols-3 gap-4">
+                            <input type="number" id="student-fee" placeholder="Monthly Fee *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <input type="number" id="student-other" placeholder="Other Charges"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <input type="number" id="student-annual" placeholder="Annual/Exam Fee"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        </div>
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="saveStudent()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+                    <button type="button" onclick="closeModal('modal-student')"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Modal -->
+    <div id="modal-staff" class="modal fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeModal('modal-staff')">
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Add Staff Member</h3>
+                    <form id="form-staff" class="space-y-4">
+                        <input type="hidden" id="staff-id">
+                        <input type="text" id="staff-name" placeholder="Staff Name *" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="staff-designation" placeholder="Designation *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <input type="number" id="staff-salary" placeholder="Salary *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        </div>
+                        <input type="text" id="staff-phone" placeholder="Phone Number"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <input type="text" id="staff-address" placeholder="Address"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="staff-subject" placeholder="Subject"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <input type="text" id="staff-qualification" placeholder="Qualification"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        </div>
+                        <input type="text" id="staff-reference" placeholder="Reference"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="saveStaff()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+                    <button type="button" onclick="closeModal('modal-staff')"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fee Modal -->
+    <div id="modal-fee" class="modal fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeModal('modal-fee')">
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Collect Fee</h3>
+                    <form id="form-fee" class="space-y-4">
+                        <input type="hidden" id="fee-id">
+                        <select id="fee-student" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <option value="">Select Student *</option>
+                        </select>
+                        <div class="grid grid-cols-2 gap-4">
+                            <select id="fee-month" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                <option value="">Month *</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                            <input type="number" id="fee-year" placeholder="Year *" required value="2026"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        </div>
+                        <input type="text" id="fee-description"
+                            placeholder="Description (e.g., Monthly Tuition, Admission)" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="fee-amount" placeholder="Amount (PKR) *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <select id="fee-method" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                <option value="Cash">Cash</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="JazzCash">JazzCash</option>
+                                <option value="EasyPaisa">EasyPaisa</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <input type="date" id="fee-date" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="saveFee()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 sm:ml-3 sm:w-auto sm:text-sm">Save
+                        & Generate Voucher</button>
+                    <button type="button" onclick="closeModal('modal-fee')"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div id="modal-expense" class="modal fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                onclick="closeModal('modal-expense')"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Add Expense</h3>
+                    <form id="form-expense" class="space-y-4">
+                        <input type="hidden" id="expense-id">
+                        <input type="date" id="expense-date" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <select id="expense-category" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <option value="">Category *</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Supplies">Supplies</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="expense-description" placeholder="Description *" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="expense-amount" placeholder="Amount (PKR) *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <select id="expense-method" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                <option value="Cash">Cash</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="JazzCash">JazzCash</option>
+                                <option value="EasyPaisa">EasyPaisa</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <input type="text" id="expense-note" placeholder="Note (Optional)"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="saveExpense()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+                    <button type="button" onclick="closeModal('modal-expense')"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Asset Modal -->
+    <div id="modal-asset" class="modal fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeModal('modal-asset')">
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Add Asset</h3>
+                    <form id="form-asset" class="space-y-4">
+                        <input type="hidden" id="asset-id">
+                        <input type="text" id="asset-name" placeholder="Asset Name *" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <input type="text" id="asset-category" placeholder="Category (e.g., Furniture, Electronics)"
+                            required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="date" id="asset-date" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <input type="number" id="asset-cost" placeholder="Cost (PKR) *" required
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        </div>
+                        <select id="asset-condition" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            <option value="New">New</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Poor">Poor</option>
+                        </select>
+                        <input type="text" id="asset-note" placeholder="Note (Optional)"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    </form>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="saveAsset()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+                    <button type="button" onclick="closeModal('modal-asset')"
+                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voucher Modal -->
+    <div id="modal-voucher" class="modal fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"
+                onclick="closeModal('modal-voucher')"></div>
+            <div
+                class="relative bg-white rounded-lg shadow-2xl transform transition-all max-w-2xl w-full p-8 voucher-bg">
+                <div class="bg-white/90 p-6 rounded-lg relative z-10">
+                    <div class="text-center border-b-2 border-emerald-600 pb-4 mb-6">
+                        <img src="drq.png" alt="DRQ Logo" class="h-20 mx-auto mb-2 object-contain">
+                        <h2 class="text-2xl font-bold text-emerald-800">Dar-E-Arqam School</h2>
+                        <p class="text-gray-600 font-medium">Official Fee Receipt / Voucher</p>
+                        <p class="text-sm text-gray-500 mt-1">Branch: <span id="voucher-branch"></span></p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+                        <div><span class="font-semibold text-gray-600">Receipt No:</span> <span id="voucher-no"></span>
+                        </div>
+                        <div><span class="font-semibold text-gray-600">Date:</span> <span id="voucher-date"></span>
+                        </div>
+                        <div><span class="font-semibold text-gray-600">Student Name:</span> <span
+                                id="voucher-student"></span></div>
+                        <div><span class="font-semibold text-gray-600">Class:</span> <span id="voucher-class"></span>
+                        </div>
+                    </div>
+                    <table class="w-full text-sm mb-6 border-collapse">
+                        <thead>
+                            <tr class="bg-emerald-50 text-emerald-800">
+                                <th class="border border-emerald-200 px-4 py-2 text-left">Description</th>
+                                <th class="border border-emerald-200 px-4 py-2 text-left">Month/Year</th>
+                                <th class="border border-emerald-200 px-4 py-2 text-right">Amount (PKR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-200 px-4 py-3" id="voucher-desc"></td>
+                                <td class="border border-gray-200 px-4 py-3" id="voucher-month"></td>
+                                <td class="border border-gray-200 px-4 py-3 text-right font-semibold"
+                                    id="voucher-amount"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-gray-50">
+                                <td colspan="2" class="border border-gray-200 px-4 py-3 text-right font-bold">Total
+                                    Paid:</td>
+                                <td class="border border-gray-200 px-4 py-3 text-right font-bold text-emerald-700"
+                                    id="voucher-total"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="text-sm text-gray-600 mb-8">
+                        <p><span class="font-semibold">Payment Method:</span> <span id="voucher-method"></span></p>
+                        <p class="mt-2 italic">This is a computer-generated receipt and does not require a signature.
+                        </p>
+                    </div>
+                    <div class="flex justify-center gap-4 no-print">
+                        <button onclick="exportToPNG('voucher-content')"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"><i
+                                class="fas fa-image mr-2"></i>Save as PNG</button>
+                        <button onclick="exportToPDF('voucher-content')"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"><i
+                                class="fas fa-file-pdf mr-2"></i>Save as PDF</button>
+                        <button onclick="window.print()"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium"><i
+                                class="fas fa-print mr-2"></i>Print</button>
+                        <button onclick="closeModal('modal-voucher')"
+                            class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-md text-sm font-medium">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- State Management ---
+        let appData = {
+            students: [],
+            staff: [],
+            fees: [],
+            expenses: [],
+            assets: []
+        };
+        let branchName = sessionStorage.getItem("branch") || "Main Campus";
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-branch').textContent = branchName;
+            document.getElementById('settings-branch').value = branchName;
+            document.getElementById('fee-date').valueAsDate = new Date();
+            document.getElementById('expense-date').valueAsDate = new Date();
+            document.getElementById('asset-date').valueAsDate = new Date();
+            loadData();
+        });
+
+        // --- Backend Communication ---
+        async function loadData() {
+            try {
+                const response = await fetch('/drq/read', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ branch: branchName })
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.data) {
+                        appData = result.data;
+                    }
+                }
+            } catch (error) {
+                console.log("Using local data or backend not reachable yet:", error);
+            }
+            refreshAllViews();
+        }
+
+        async function saveData() {
+            try {
+                const response = await fetch('/drq/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ branch: branchName, data: appData })
+                });
+                if (response.ok) {
+                    alert('Data saved successfully!');
+                } else {
+                    alert('Failed to save data.');
+                }
+            } catch (error) {
+                console.error("Save error:", error);
+                alert('Backend error. Data saved locally in memory only.');
+            }
+        }
+
+        // --- Navigation ---
+        function showView(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const titles = {
+                dashboard: 'Dashboard', students: 'Student Management', staff: 'Staff Management',
+                fees: 'Fee Collection', expenses: 'Expenses Management', assets: 'Assets Management',
+                reports: 'Reports & Vouchers', settings: 'System Settings'
+            };
+            document.getElementById('page-title').textContent = titles[viewName] || 'Dashboard';
+
+            if (viewName === 'fees') populateStudentDropdown();
+            if (viewName === 'dashboard') updateDashboard();
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.classList.add('modal-active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.classList.remove('modal-active');
+            // Reset forms
+            const form = document.querySelector(`#${modalId} form`);
+            if (form) form.reset();
+        }
+
+        // --- CRUD Operations ---
+        function saveStudent() {
+            const id = document.getElementById('student-id').value || Date.now().toString();
+            const student = {
+                id, name: document.getElementById('student-name').value,
+                fatherName: document.getElementById('student-father').value,
+                class: document.getElementById('student-class').value,
+                section: document.getElementById('student-section').value,
+                phone: document.getElementById('student-phone').value,
+                address: document.getElementById('student-address').value,
+                status: document.getElementById('student-status').value,
+                monthlyFee: parseFloat(document.getElementById('student-fee').value) || 0,
+                otherCharges: parseFloat(document.getElementById('student-other').value) || 0,
+                annualFee: parseFloat(document.getElementById('student-annual').value) || 0
+            };
+
+            const idx = appData.students.findIndex(s => s.id === id);
+            if (idx >= 0) appData.students[idx] = student;
+            else appData.students.push(student);
+
+            closeModal('modal-student');
+            renderStudents();
+            saveData();
+        }
+
+        function editStudent(id) {
+            const s = appData.students.find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('student-id').value = s.id;
+            document.getElementById('student-name').value = s.name;
+            document.getElementById('student-father').value = s.fatherName;
+            document.getElementById('student-class').value = s.class;
+            document.getElementById('student-section').value = s.section;
+            document.getElementById('student-phone').value = s.phone;
+            document.getElementById('student-address').value = s.address;
+            document.getElementById('student-status').value = s.status;
+            document.getElementById('student-fee').value = s.monthlyFee;
+            document.getElementById('student-other').value = s.otherCharges;
+            document.getElementById('student-annual').value = s.annualFee;
+            openModal('modal-student');
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                appData.students = appData.students.filter(s => s.id !== id);
+                renderStudents();
+                saveData();
+            }
+        }
+
+        function saveStaff() {
+            const id = document.getElementById('staff-id').value || Date.now().toString();
+            const staff = {
+                id, name: document.getElementById('staff-name').value,
+                designation: document.getElementById('staff-designation').value,
+                salary: parseFloat(document.getElementById('staff-salary').value) || 0,
+                phone: document.getElementById('staff-phone').value,
+                address: document.getElementById('staff-address').value,
+                subject: document.getElementById('staff-subject').value,
+                qualification: document.getElementById('staff-qualification').value,
+                reference: document.getElementById('staff-reference').value
+            };
+            const idx = appData.staff.findIndex(s => s.id === id);
+            if (idx >= 0) appData.staff[idx] = staff;
+            else appData.staff.push(staff);
+            closeModal('modal-staff');
+            renderStaff();
+            saveData();
+        }
+
+        function deleteStaff(id) {
+            if (confirm('Delete this staff member?')) {
+                appData.staff = appData.staff.filter(s => s.id !== id);
+                renderStaff();
+                saveData();
+            }
+        }
+
+        function populateStudentDropdown() {
+            const select = document.getElementById('fee-student');
+            select.innerHTML = '<option value="">Select Student *</option>';
+            appData.students.filter(s => s.status === 'Active').forEach(s => {
+                select.innerHTML += `<option value="${s.id}">${s.name} (${s.class}-${s.section})</option>`;
+            });
+        }
+
+        function saveFee() {
+            const id = Date.now().toString();
+            const studentId = document.getElementById('fee-student').value;
+            const student = appData.students.find(s => s.id === studentId);
+            const fee = {
+                id, studentId, studentName: student ? student.name : 'Unknown',
+                studentClass: student ? `${student.class}-${student.section}` : '',
+                month: document.getElementById('fee-month').value,
+                year: document.getElementById('fee-year').value,
+                description: document.getElementById('fee-description').value,
+                amount: parseFloat(document.getElementById('fee-amount').value) || 0,
+                method: document.getElementById('fee-method').value,
+                date: document.getElementById('fee-date').value
+            };
+            appData.fees.push(fee);
+            closeModal('modal-fee');
+            renderFees();
+            saveData();
+            showVoucher(fee);
+        }
+
+        function deleteFee(id) {
+            if (confirm('Delete this fee record?')) {
+                appData.fees = appData.fees.filter(f => f.id !== id);
+                renderFees();
+                saveData();
+            }
+        }
+
+        function saveExpense() {
+            const id = Date.now().toString();
+            const expense = {
+                id, date: document.getElementById('expense-date').value,
+                category: document.getElementById('expense-category').value,
+                description: document.getElementById('expense-description').value,
+                amount: parseFloat(document.getElementById('expense-amount').value) || 0,
+                method: document.getElementById('expense-method').value,
+                note: document.getElementById('expense-note').value
+            };
+            appData.expenses.push(expense);
+            closeModal('modal-expense');
+            renderExpenses();
+            saveData();
+        }
+
+        function deleteExpense(id) {
+            if (confirm('Delete this expense?')) {
+                appData.expenses = appData.expenses.filter(e => e.id !== id);
+                renderExpenses();
+                saveData();
+            }
+        }
+
+        function saveAsset() {
+            const id = Date.now().toString();
+            const asset = {
+                id, name: document.getElementById('asset-name').value,
+                category: document.getElementById('asset-category').value,
+                date: document.getElementById('asset-date').value,
+                cost: parseFloat(document.getElementById('asset-cost').value) || 0,
+                condition: document.getElementById('asset-condition').value,
+                note: document.getElementById('asset-note').value
+            };
+            appData.assets.push(asset);
+            closeModal('modal-asset');
+            renderAssets();
+            saveData();
+        }
+
+        function deleteAsset(id) {
+            if (confirm('Delete this asset?')) {
+                appData.assets = appData.assets.filter(a => a.id !== id);
+                renderAssets();
+                saveData();
+            }
+        }
+
+        // --- Rendering Functions ---
+        function refreshAllViews() {
+            renderStudents();
+            renderStaff();
+            renderFees();
+            renderExpenses();
+            renderAssets();
+            updateDashboard();
+        }
+
+        function renderStudents() {
+            const search = document.getElementById('search-students').value.toLowerCase();
+            const classFilter = document.getElementById('filter-student-class').value;
+            const statusFilter = document.getElementById('filter-student-status').value;
+
+            const filtered = appData.students.filter(s => {
+                const matchSearch = s.name.toLowerCase().includes(search) || s.fatherName.toLowerCase().includes(search);
+                const matchClass = !classFilter || s.class === classFilter;
+                const matchStatus = !statusFilter || s.status === statusFilter;
+                return matchSearch && matchClass && matchStatus;
+            });
+
+            const tbody = document.getElementById('table-students');
+            tbody.innerHTML = filtered.map(s => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">${s.name}</td>
+                    <td class="px-6 py-4 text-gray-600">${s.fatherName}</td>
+                    <td class="px-6 py-4 text-gray-600">${s.class} - ${s.section}</td>
+                    <td class="px-6 py-4 text-gray-600">${s.phone || '-'}</td>
+                    <td class="px-6 py-4 text-gray-600">Rs. ${s.monthlyFee}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs rounded-full ${s.status === 'Active' ? 'bg-green-100 text-green-800' : s.status === 'Suspended' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${s.status}</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="editStudent('${s.id}')" class="text-blue-600 hover:text-blue-800 mr-3"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteStudent('${s.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderStaff() {
+            const search = document.getElementById('search-staff').value.toLowerCase();
+            const filtered = appData.staff.filter(s => s.name.toLowerCase().includes(search) || s.designation.toLowerCase().includes(search));
+
+            document.getElementById('table-staff').innerHTML = filtered.map(s => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">${s.name}</td>
+                    <td class="px-6 py-4 text-gray-600">${s.designation}</td>
+                    <td class="px-6 py-4 text-gray-600">${s.subject || '-'}</td>
+                    <td class="px-6 py-4 text-gray-600">${s.phone || '-'}</td>
+                    <td class="px-6 py-4 text-gray-600">Rs. ${s.salary}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteStaff('${s.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderFees() {
+            const search = document.getElementById('search-fees').value.toLowerCase();
+            const monthFilter = document.getElementById('filter-fee-month').value;
+
+            const filtered = appData.fees.filter(f => {
+                const matchSearch = f.studentName.toLowerCase().includes(search);
+                const matchMonth = !monthFilter || f.month === monthFilter;
+                return matchSearch && matchMonth;
+            }).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            document.getElementById('table-fees').innerHTML = filtered.map(f => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-gray-600">${f.date}</td>
+                    <td class="px-6 py-4 font-medium text-gray-900">${f.studentName}</td>
+                    <td class="px-6 py-4 text-gray-600">${f.month} ${f.year}</td>
+                    <td class="px-6 py-4 text-gray-600">${f.description}</td>
+                    <td class="px-6 py-4 font-semibold text-emerald-600">Rs. ${f.amount}</td>
+                    <td class="px-6 py-4 text-gray-600">${f.method}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick='showVoucher(${JSON.stringify(f)})' class="text-blue-600 hover:text-blue-800 mr-3" title="View Voucher"><i class="fas fa-receipt"></i></button>
+                        <button onclick="deleteFee('${f.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderExpenses() {
+            const search = document.getElementById('search-expenses').value.toLowerCase();
+            const filtered = appData.expenses.filter(e => e.description.toLowerCase().includes(search) || e.category.toLowerCase().includes(search));
+
+            document.getElementById('table-expenses').innerHTML = filtered.map(e => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-gray-600">${e.date}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">${e.category}</span></td>
+                    <td class="px-6 py-4 text-gray-600">${e.description}</td>
+                    <td class="px-6 py-4 font-semibold text-red-600">Rs. ${e.amount}</td>
+                    <td class="px-6 py-4 text-gray-600">${e.method}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteExpense('${e.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAssets() {
+            const search = document.getElementById('search-assets').value.toLowerCase();
+            const filtered = appData.assets.filter(a => a.name.toLowerCase().includes(search));
+
+            document.getElementById('table-assets').innerHTML = filtered.map(a => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">${a.name}</td>
+                    <td class="px-6 py-4 text-gray-600">${a.category}</td>
+                    <td class="px-6 py-4 text-gray-600">${a.date}</td>
+                    <td class="px-6 py-4 text-gray-600">Rs. ${a.cost}</td>
+                    <td class="px-6 py-4 text-gray-600">${a.condition}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteAsset('${a.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateDashboard() {
+            const activeStudents = appData.students.filter(s => s.status === 'Active').length;
+            document.getElementById('dash-total-students').textContent = appData.students.length;
+            document.getElementById('dash-active-students').textContent = activeStudents;
+            document.getElementById('dash-total-staff').textContent = appData.staff.length;
+
+            const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+            const currentYear = new Date().getFullYear().toString();
+            const monthlyFees = appData.fees.filter(f => f.month === currentMonth && f.year === currentYear).reduce((sum, f) => sum + f.amount, 0);
+            document.getElementById('dash-fees-collected').textContent = monthlyFees.toLocaleString();
+
+            const totalExpenses = appData.expenses.reduce((sum, e) => sum + e.amount, 0);
+            const totalFees = appData.fees.reduce((sum, f) => sum + f.amount, 0);
+            document.getElementById('dash-net-position').textContent = (totalFees - totalExpenses).toLocaleString();
+
+            const recentFees = appData.fees.slice(-5).reverse();
+            document.getElementById('dash-recent-fees').innerHTML = recentFees.map(f => `
+                <tr class="border-b border-gray-50"><td class="px-4 py-3 text-gray-600">${f.date}</td><td class="px-4 py-3 font-medium">${f.studentName}</td><td class="px-4 py-3 text-gray-600">${f.month}</td><td class="px-4 py-3 text-right font-semibold text-emerald-600">Rs. ${f.amount}</td></tr>
+            `).join('') || '<tr><td colspan="4" class="px-4 py-3 text-center text-gray-500">No recent fees</td></tr>';
+
+            const recentExp = appData.expenses.slice(-5).reverse();
+            document.getElementById('dash-recent-expenses').innerHTML = recentExp.map(e => `
+                <tr class="border-b border-gray-50"><td class="px-4 py-3 text-gray-600">${e.date}</td><td class="px-4 py-3"><span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">${e.category}</span></td><td class="px-4 py-3 text-gray-600">${e.description}</td><td class="px-4 py-3 text-right font-semibold text-red-600">Rs. ${e.amount}</td></tr>
+            `).join('') || '<tr><td colspan="4" class="px-4 py-3 text-center text-gray-500">No recent expenses</td></tr>';
+        }
+
+        // --- Voucher & Reports ---
+        function showVoucher(fee) {
+            document.getElementById('voucher-branch').textContent = branchName;
+            document.getElementById('voucher-no').textContent = 'VCH-' + fee.id.slice(-6);
+            document.getElementById('voucher-date').textContent = fee.date;
+            document.getElementById('voucher-student').textContent = fee.studentName;
+            document.getElementById('voucher-class').textContent = fee.studentClass;
+            document.getElementById('voucher-desc').textContent = fee.description;
+            document.getElementById('voucher-month').textContent = `${fee.month} ${fee.year}`;
+            document.getElementById('voucher-amount').textContent = fee.amount.toLocaleString();
+            document.getElementById('voucher-total').textContent = 'Rs. ' + fee.amount.toLocaleString();
+            document.getElementById('voucher-method').textContent = fee.method;
+            openModal('modal-voucher');
+        }
+
+        function generateReport(type) {
+            document.getElementById('report-output').classList.remove('hidden');
+            document.getElementById('report-branch').textContent = branchName;
+            document.getElementById('report-date').textContent = new Date().toLocaleDateString();
+            const dataDiv = document.getElementById('report-data');
+
+            if (type === 'students') {
+                document.getElementById('report-title').textContent = 'Student Directory Report';
+                document.getElementById('report-subtitle').textContent = 'Complete list of enrolled students';
+                dataDiv.innerHTML = `<table class="w-full text-sm border-collapse"><thead><tr class="bg-emerald-50"><th class="border p-2">Name</th><th class="border p-2">Class</th><th class="border p-2">Phone</th><th class="border p-2">Monthly Fee</th><th class="border p-2">Status</th></tr></thead><tbody>${appData.students.map(s => `<tr><td class="border p-2">${s.name}</td><td class="border p-2">${s.class}-${s.section}</td><td class="border p-2">${s.phone}</td><td class="border p-2">Rs. ${s.monthlyFee}</td><td class="border p-2">${s.status}</td></tr>`).join('')}</tbody></table>`;
+            } else if (type === 'fees') {
+                document.getElementById('report-title').textContent = 'Fee Collection Report';
+                document.getElementById('report-subtitle').textContent = 'All fee transactions';
+                const total = appData.fees.reduce((sum, f) => sum + f.amount, 0);
+                dataDiv.innerHTML = `<table class="w-full text-sm border-collapse"><thead><tr class="bg-emerald-50"><th class="border p-2">Date</th><th class="border p-2">Student</th><th class="border p-2">Month</th><th class="border p-2">Amount</th></tr></thead><tbody>${appData.fees.map(f => `<tr><td class="border p-2">${f.date}</td><td class="border p-2">${f.studentName}</td><td class="border p-2">${f.month} ${f.year}</td><td class="border p-2">Rs. ${f.amount}</td></tr>`).join('')}<tr class="font-bold bg-gray-50"><td colspan="3" class="border p-2 text-right">Total Collected:</td><td class="border p-2">Rs. ${total}</td></tr></tbody></table>`;
+            } else if (type === 'financial') {
+                document.getElementById('report-title').textContent = 'Financial Summary';
+                document.getElementById('report-subtitle').textContent = 'Income vs Expenses';
+                const totalIncome = appData.fees.reduce((sum, f) => sum + f.amount, 0);
+                const totalExpense = appData.expenses.reduce((sum, e) => sum + e.amount, 0);
+                dataDiv.innerHTML = `
+                    <div class="grid grid-cols-2 gap-8 mb-6">
+                        <div class="bg-emerald-50 p-4 rounded border border-emerald-200"><h4 class="font-bold text-emerald-800 mb-2">Total Income (Fees)</h4><p class="text-2xl font-bold">Rs. ${totalIncome.toLocaleString()}</p></div>
+                        <div class="bg-red-50 p-4 rounded border border-red-200"><h4 class="font-bold text-red-800 mb-2">Total Expenses</h4><p class="text-2xl font-bold">Rs. ${totalExpense.toLocaleString()}</p></div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded border border-gray-200 text-center">
+                        <h4 class="font-bold text-gray-800 mb-2">Net Position</h4>
+                        <p class="text-3xl font-bold ${totalIncome - totalExpense >= 0 ? 'text-emerald-600' : 'text-red-600'}">Rs. ${(totalIncome - totalExpense).toLocaleString()}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Export Functions ---
+        function exportToPNG(elementId) {
+            const element = document.getElementById(elementId);
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `${elementId}_${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function exportToPDF(elementId) {
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById(elementId);
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 190;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 10;
+
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                pdf.save(`${elementId}_${Date.now()}.pdf`);
+            });
+        }
+
+        // --- Settings & Backup ---
+        function updateBranch() {
+            const newBranch = document.getElementById('settings-branch').value.trim();
+            if (newBranch) {
+                branchName = newBranch;
+                sessionStorage.setItem("branch", branchName);
+                document.getElementById('current-branch').textContent = branchName;
+                alert(`Branch updated to: ${branchName}. Please save data to initialize the new branch file.`);
+                loadData();
+            }
+        }
+
+        function downloadBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `dar_e_arqam_backup_${branchName}_${Date.now()}.json`);
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function restoreBackup(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    appData = JSON.parse(e.target.result);
+                    refreshAllViews();
+                    saveData();
+                    alert('Backup restored successfully!');
+                } catch (err) {
+                    alert('Invalid backup file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+
+</html>
