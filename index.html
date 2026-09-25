@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Dar-e-Arqam School | Campus Management</title>
+    <style>
+        :root {
+            --primary: #fdd803;
+            --primary-dark: #c7a900;
+            --primary-light: #fff5b8;
+            --ink: #202124;
+            --glass: rgba(255, 255, 255, 0.85);
+            --text: #202124;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #168a52;
+            --danger: #d64545;
+            --white: #fff;
+            --shadow: 0 28px 80px rgba(0, 0, 0, .25)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            font-family: "Poppins", Arial, sans-serif;
+            color: var(--text)
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(ellipse at 12% 15%, rgba(253, 216, 3, .28), transparent 32%),
+                linear-gradient(135deg, rgba(13, 17, 23, .85), rgba(29, 25, 10, .65)),
+                url("bg.png") center/cover fixed no-repeat;
+            overflow-x: hidden;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .app {
+            width: min(1320px, 100%);
+            min-height: 760px;
+            display: grid;
+            grid-template-columns: minmax(390px, 43%) minmax(0, 57%);
+            background: #fff;
+            border: 1px solid rgba(255, 255, 255, .55);
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: 0 35px 100px rgba(0, 0, 0, .34), 0 2px 12px rgba(255, 255, 255, .12) inset;
+            animation: appIn .85s cubic-bezier(.16, 1, .3, 1) both;
+            transform-origin: center
+        }
+
+        /* BRAND SIDE */
+        .brand {
+            position: relative;
+            overflow: hidden;
+            padding: 52px 48px 34px;
+            color: #fff;
+            background:
+                radial-gradient(circle at 90% 8%, rgba(253, 216, 3, .22), transparent 27%),
+                linear-gradient(145deg, #25220e 0%, #161712 52%, #302909 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between
+        }
+
+        .brand::before,
+        .brand::after {
+            content: "";
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        .brand::before {
+            width: 500px;
+            height: 500px;
+            left: -270px;
+            top: -260px
+        }
+
+        .brand::after {
+            width: 560px;
+            height: 560px;
+            right: -340px;
+            bottom: -330px;
+            animation-delay: -4s;
+        }
+
+        .brand-content,
+        .brand-footer,
+        .developer-card {
+            position: relative;
+            z-index: 1
+        }
+
+        .logo {
+            width: 84px;
+            height: 84px;
+            border-radius: 20px;
+            background: #fff;
+            color: var(--primary);
+            display: grid;
+            place-items: center;
+            font-size: 27px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, .22);
+            animation: float 4s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .brand h1 {
+            font-size: clamp(34px, 3vw, 46px);
+            line-height: 1.08;
+            margin-top: 30px;
+            letter-spacing: -1px;
+            animation: fadeInUp 0.8s cubic-bezier(.16, 1, .3, 1) 0.2s both;
+        }
+
+        .brand p {
+            max-width: 390px;
+            margin-top: 17px;
+            color: rgba(255, 255, 255, .82);
+            line-height: 1.75;
+            font-size: 15px;
+            animation: fadeInUp 0.8s cubic-bezier(.16, 1, .3, 1) 0.3s both;
+        }
+
+        .features {
+            margin-top: 35px;
+            display: grid;
+            gap: 13px;
+            animation: fadeInUp 0.8s cubic-bezier(.16, 1, .3, 1) 0.4s both;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: #fdd803;
+            font-size: 13px;
+            transition: transform 0.2s ease;
+        }
+
+        .feature:hover {
+            transform: translateX(5px);
+        }
+
+        .feature i {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .12);
+            display: grid;
+            place-items: center;
+            font-style: normal;
+            transition: background 0.3s ease;
+        }
+
+        .feature:hover i {
+            background: rgba(253, 216, 3, 0.25);
+        }
+
+        .developer-card {
+            margin: 25px 0 15px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .developer-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(253, 216, 3, 0.4);
+        }
+
+        .dev-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2px;
+        }
+
+        .dev-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .support-open {
+            width: 100%;
+            border: 1px solid rgba(253, 216, 3, 0.4);
+            background: rgba(253, 216, 3, 0.12);
+            color: var(--primary);
+            padding: 10px 14px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .support-open:hover {
+            background: var(--primary);
+            color: #161712;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(253, 216, 3, 0.25);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .86)
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #39d98a;
+            box-shadow: 0 0 12px #39d98a;
+            animation: blink 2s infinite;
+        }
+
+        .copy {
+            margin-top: 9px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, .52)
+        }
+
+        /* RIGHT PANEL */
+        .panel {
+            padding: 48px clamp(34px, 4.2vw, 68px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f4;
+            border: 1px solid #ecebe6;
+            padding: 5px;
+            border-radius: 12px;
+            gap: 4px
+        }
+
+        .tab {
+            border: 0;
+            background: transparent;
+            padding: 10px 18px;
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            transition: all .25s ease
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text);
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .tab.active {
+            background: #fff;
+            color: #29250c;
+            background: #fff7c9;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .06)
+        }
+
+        .view {
+            display: none;
+            opacity: 0;
+            transform: translateX(16px);
+            transition: all 0.35s cubic-bezier(.16, 1, .3, 1);
+        }
+
+        .view.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .eyebrow {
+            color: #b59800;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px
+        }
+
+        h2 {
+            font-size: 30px;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 16px
+        }
+
+        .group {
+            margin-bottom: 18px
+        }
+
+        .group.full {
+            grid-column: 1/-1
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px;
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0 14px;
+            background: #fafafa;
+            color: var(--text);
+            outline: 0;
+            transition: all .2s ease
+        }
+
+        input:hover,
+        select:hover {
+            border-color: #cbd5e1;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            background: #fff;
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 4px rgba(253, 216, 3, .25);
+        }
+
+        .input-wrap {
+            position: relative
+        }
+
+        .password {
+            padding-right: 60px
+        }
+
+        .show {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: #a38900;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 7px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .show:hover {
+            background: rgba(253, 216, 3, 0.15);
+        }
+
+        .action {
+            width: 100%;
+            height: 50px;
+            border: 0;
+            border-radius: 10px;
+            color: #28240a;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffe85c, var(--primary) 55%, #e7c400);
+            box-shadow: 0 10px 24px rgba(199, 169, 0, .24);
+            transition: all .25s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 32px rgba(199, 169, 0, .38)
+        }
+
+        .action:active {
+            transform: translateY(0);
+        }
+
+        .action:disabled {
+            opacity: .75;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .action .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(40, 36, 10, .25);
+            border-top-color: #28240a;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            margin: auto
+        }
+
+        .action.loading .spinner {
+            display: block
+        }
+
+        .action.loading .btntext {
+            display: none
+        }
+
+        .message {
+            min-height: 22px;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+            font-weight: 650;
+            transition: all 0.3s ease;
+        }
+
+        .helper {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        .switch {
+            border: 0;
+            background: transparent;
+            color: #ab8f00;
+            font-weight: 800;
+            font-size: 12px;
+            margin-left: 4px;
+            transition: color 0.2s;
+        }
+
+        .switch:hover {
+            color: #7d6800;
+            text-decoration: underline;
+        }
+
+        .notice {
+            background: #fffdf0;
+            border: 1px solid #f3ebd0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            color: #705640;
+            font-size: 11px;
+            line-height: 1.5;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .required {
+            color: var(--danger)
+        }
+
+        /* FULL PAGE DEVELOPER INFO VIEW STYLES */
+        .dev-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dev-info-card {
+            background: #fafafa;
+            border: 1px solid #eef0f2;
+            border-radius: 12px;
+            padding: 14px 16px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dev-info-card:hover {
+            border-color: #ebd971;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .dev-info-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .dev-info-card small {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #8c8c8c;
+            margin-bottom: 4px;
+        }
+
+        .dev-info-card strong, 
+        .dev-info-card a {
+            font-size: 13px;
+            color: #1a1a1a;
+            font-weight: 700;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+        }
+
+        .dev-info-card a:hover {
+            color: #ab8f00;
+            text-decoration: underline;
+        }
+
+        .dev-action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .dev-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .dev-btn-whatsapp {
+            background: #20b96b;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(32, 185, 107, 0.2);
+        }
+
+        .dev-btn-whatsapp:hover {
+            background: #199857;
+            transform: translateY(-2px);
+        }
+
+        .dev-btn-portal {
+            background: #202124;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .dev-btn-portal:hover {
+            background: #343538;
+            transform: translateY(-2px);
+        }
+
+        /* LOADER MODAL */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            z-index: 99;
+            display: grid;
+            place-items: center;
+            transition: opacity .4s ease, visibility .4s ease;
+        }
+
+        .loader.hide {
+            opacity: 0;
+            visibility: hidden
+        }
+
+        .loader-inner {
+            text-align: center
+        }
+
+        .loader-logo {
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            margin: auto auto 18px;
+            box-shadow: 0 10px 25px rgba(253, 216, 3, 0.4);
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        .ring {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #f3ebd0;
+            border-top-color: var(--primary-dark);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin: auto
+        }
+
+        .loader p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        /* KEYFRAME ANIMATIONS */
+        @keyframes appIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-7px)
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* MEDIA QUERIES */
+        @media(max-width:900px) {
+            body {
+                padding: 12px
+            }
+
+            .app {
+                grid-template-columns: 1fr;
+                max-width: 620px
+            }
+
+            .brand {
+                min-height: 310px;
+                padding: 38px
+            }
+
+            .brand h1 {
+                font-size: 34px
+            }
+
+            .panel {
+                padding: 35px
+            }
+        }
+
+        @media(max-width:560px) {
+            .form-grid, .dev-info-grid {
+                grid-template-columns: 1fr
+            }
+
+            .group.full {
+                grid-column: auto
+            }
+
+            .brand {
+                min-height: 270px
+            }
+
+            .features {
+                display: none
+            }
+
+            .panel {
+                padding: 28px 22px
+            }
+
+            .topbar {
+                justify-content: stretch
+            }
+
+            .tabs {
+                width: 100%
+            }
+
+            .tab {
+                flex: 1
+            }
+
+            .dev-action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">
+                <img src="drq.png" alt="Dar-e-Arqam" style="width:100%;height:100%;object-fit:contain">
+            </div>
+            <div class="ring"></div>
+            <p>Loading Dar-e-Arqam School Management System...</p>
+        </div>
+    </div>
+
+    <main class="app">
+        <section class="brand">
+            <div class="brand-content">
+                <div class="logo">
+                    <img src="drq.png" alt="Dar-e-Arqam" style="width:100%;height:100%;object-fit:contain;border-radius:12px">
+                </div>
+                <h1>Dar-e-Arqam School</h1>
+                <p>Modern educational management system for campuses, principals, teachers and administration.</p>
+                <div class="features">
+                    <div class="feature"><i>✓</i> Secure campus authentication</div>
+                    <div class="feature"><i>✓</i> Centralized campus management</div>
+                    <div class="feature"><i>✓</i> Student & staff management</div>
+                    <div class="feature"><i>✓</i> Academic administration dashboard</div>
+                </div>
+            </div>
+
+            <div class="developer-card">
+                <div class="dev-label">Software by</div>
+                <div class="dev-name">Friday Software Technology Park</div>
+                <button class="support-open" id="devInfoBtn" type="button">
+                    <span>Developer Info & Support</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+            <div class="brand-footer">
+                <div class="status"><span class="dot"></span> Gold Edition • System Ready</div>
+                <div class="copy">© 2026 Dar-e-Arqam School Management System</div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="topbar">
+                <div class="tabs">
+                    <button class="tab active" id="loginTab" type="button">Campus Login</button>
+                    <button class="tab" id="registerTab" type="button">Register Campus</button>
+                    <button class="tab" id="developerTab" type="button">Developer Info</button>
+                </div>
+            </div>
+
+            <!-- LOGIN VIEW -->
+            <div class="view active" id="loginView">
+                <div class="eyebrow">Educational Access</div>
+                <h2>Campus Login</h2>
+                <p class="subtitle">Select your campus and enter authorized credentials.</p>
+
+                <form id="loginForm" novalidate>
+                    <div class="group">
+                        <label for="branch">Campus Name <span class="required">*</span></label>
+                        <select id="branch" required>
+                            <option value="" selected disabled>Select Branch</option>
+                            <option value="PGB-BRANCH-1">PGB-BRANCH-1</option>
+                            <option value="PGB-BRANCH-2">PGB-BRANCH-2</option>
+                        </select>
+                    </div>
+
+                    <div class="group">
+                        <label for="loginPassword">Campus Password <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <input id="loginPassword" class="password" type="password" autocomplete="current-password" placeholder="Enter campus password" required>
+                            <button class="show" type="button" data-target="loginPassword">Show</button>
+                        </div>
+                    </div>
+
+                    <button class="action" id="loginButton" type="submit">
+                        <span class="btntext">Sign In</span><span class="spinner"></span>
+                    </button>
+                    <div class="message" id="loginMessage"></div>
+                </form>
+
+                <div class="helper">
+                    Need a new campus?
+                    <button class="switch" type="button" data-view="register">Register New Campus</button>
+                </div>
+            </div>
+
+            <!-- REGISTER VIEW -->
+            <div class="view" id="registerView">
+                <div class="eyebrow">Campus Registration</div>
+                <h2>Register New Campus</h2>
+                <p class="subtitle">Register a campus. Backend structure remains unchanged for compatibility.</p>
+
+                <div class="notice">
+                    Branch registration should normally be protected by your backend/admin authorization.
+                    Do not store passwords in plain text on the server.
+                </div>
+
+                <form id="registerForm" novalidate>
+                    <div class="form-grid">
+                        <div class="group">
+                            <label for="branchName">Campus Name <span class="required">*</span></label>
+                            <input id="branchName" name="branchName" placeholder="e.g. Islamabad Branch" required>
+                        </div>
+
+                        <div class="group">
+                            <label for="supervisorName">Principal / Administrator <span class="required">*</span></label>
+                            <input id="supervisorName" name="supervisorName" placeholder="Supervisor full name" required>
+                        </div>
+
+                        <div class="group full">
+                            <label for="location">Campus Address <span class="required">*</span></label>
+                            <input id="location" name="location" placeholder="Complete campus address" required>
+                        </div>
+
+                        <div class="group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input id="phone" name="phone" type="tel" placeholder="+92 300 0000000" required>
+                        </div>
+
+                        <div class="group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input id="email" name="email" type="email" placeholder="branch@example.com" required>
+                        </div>
+
+                        <div class="group full">
+                            <label for="createPassword">Create Password <span class="required">*</span></label>
+                            <div class="input-wrap">
+                                <input id="createPassword" name="password" class="password" type="password" minlength="6" placeholder="Minimum 6 characters" required>
+                                <button class="show" type="button" data-target="createPassword">Show</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="action" id="registerButton" type="submit">
+                        <span class="btntext">Register Campus</span><span class="spinner"></span>
+                    </button>
+                    <div class="message" id="registerMessage"></div>
+                </form>
+
+                <div class="helper">
+                    Already registered?
+                    <button class="switch" type="button" data-view="login">Back to Campus Login</button>
+                </div>
+            </div>
+
+            <!-- FULL PAGE DEVELOPER INFO VIEW -->
+            <div class="view" id="developerView">
+                <div class="eyebrow">Technical Support & Contact</div>
+                <h2>Developer Information</h2>
+                <p class="subtitle">System architecture, developer background, and official support contacts.</p>
+
+                <div class="dev-info-grid">
+                    <div class="dev-info-card full-width">
+                        <small>Software Organization</small>
+                        <strong>Friday Software Technology Park</strong>
+                    </div>
+
+                    <div class="dev-info-card">
+                        <small>Lead Engineer & CEO</small>
+                        <strong>MUHAMMAD SULEMAN ZAFAR</strong>
+                    </div>
+
+                    <div class="dev-info-card">
+                        <small>Direct Phone</small>
+                        <strong>03079576974</strong>
+                    </div>
+
+                    <div class="dev-info-card full-width">
+                        <small>Company Support Email</small>
+                        <a href="mailto:fridaysoftware.co@outlook.com">fridaysoftware.co@outlook.com</a>
+                    </div>
+
+                    <div class="dev-info-card full-width">
+                        <small>Direct Developer Email</small>
+                        <a href="mailto:m.sulemanzafar99@proton.me">m.sulemanzafar99@proton.me</a>
+                    </div>
+                </div>
+
+                <div class="dev-action-buttons">
+                    <a class="dev-btn dev-btn-whatsapp" href="https://wa.me/923079576974" target="_blank" rel="noopener noreferrer">
+                        WhatsApp Direct Support
+                    </a>
+                    <a class="dev-btn dev-btn-portal" href="https://fridaysoftwaretechnology.github.io/admin/" target="_blank" rel="noopener noreferrer">
+                        Portal Admin Panel
+                    </a>
+                </div>
+
+                <div class="helper">
+                    Need to log in?
+                    <button class="switch" type="button" data-view="login">Back to Campus Login</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        const API_URL = "https://fridaysoftwaretechnology.pythonanywhere.com/drq";
+        const $ = id => document.getElementById(id);
+
+        const loginView = $("loginView");
+        const registerView = $("registerView");
+        const developerView = $("developerView");
+
+        const loginTab = $("loginTab");
+        const registerTab = $("registerTab");
+        const developerTab = $("developerTab");
+
+        const branchSelect = $("branch");
+
+        /* =========================================================
+           SWITCH LOGIN / REGISTER / DEVELOPER VIEW
+        ========================================================= */
+        function showView(view) {
+            loginView.classList.toggle("active", view === "login");
+            registerView.classList.toggle("active", view === "register");
+            developerView.classList.toggle("active", view === "developer");
+
+            loginTab.classList.toggle("active", view === "login");
+            registerTab.classList.toggle("active", view === "register");
+            developerTab.classList.toggle("active", view === "developer");
+
+            clearMessages();
+
+            if (view === "login") {
+                loadBranches();
+            }
+        }
+
+        function clearMessages() {
+            $("loginMessage").textContent = "";
+            $("registerMessage").textContent = "";
+        }
+
+        loginTab.addEventListener("click", () => showView("login"));
+        registerTab.addEventListener("click", () => showView("register"));
+        developerTab.addEventListener("click", () => showView("developer"));
+        $("devInfoBtn").addEventListener("click", () => showView("developer"));
+
+        document.querySelectorAll(".switch").forEach(button => {
+            button.addEventListener("click", () => {
+                showView(button.dataset.view);
+            });
+        });
+
+        /* =========================================================
+           SHOW / HIDE PASSWORD
+        ========================================================= */
+        document.querySelectorAll(".show").forEach(button => {
+            button.addEventListener("click", () => {
+                const input = $(button.dataset.target);
+                const isVisible = input.type === "text";
+                input.type = isVisible ? "password" : "text";
+                button.textContent = isVisible ? "Show" : "Hide";
+            });
+        });
+
+        /* =========================================================
+           BUTTON LOADING & MESSAGES
+        ========================================================= */
+        function setLoading(button, loading, text) {
+            button.disabled = loading;
+            button.classList.toggle("loading", loading);
+            const textElement = button.querySelector(".btntext");
+            if (textElement) {
+                textElement.textContent = loading ? "" : text;
+            }
+        }
+
+        function setMessage(element, text, type = "error") {
+            element.textContent = text || "";
+            element.style.color = type === "success" ? "var(--success)" : "var(--danger)";
+        }
+
+        /* =========================================================
+           READ / SAVE CONFIG
+        ========================================================= */
+        async function readConfig() {
+            const response = await fetch(`${API_URL}/read`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ file: "config.json" })
+            });
+
+            let data;
+            try {
+                data = await response.json();
+            } catch (error) {
+                throw new Error("Server returned an invalid response.");
+            }
+
+            if (!response.ok) {
+                throw new Error(data.message || data.error || `Server error (${response.status}).`);
+            }
+            return data;
+        }
+
+        async function saveConfig(data) {
+            const response = await fetch(`${API_URL}/save`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ file: "config.json", data: data })
+            });
+
+            let result;
+            try {
+                result = await response.json();
+            } catch (error) {
+                throw new Error("Server returned an invalid response.");
+            }
+
+            if (!response.ok || result.error) {
+                throw new Error(result.message || result.error || `Unable to save data (${response.status}).`);
+            }
+            return result;
+        }
+
+        /* =========================================================
+           LOAD BRANCHES
+        ========================================================= */
+        async function loadBranches() {
+            branchSelect.innerHTML = "";
+            branchSelect.disabled = true;
+
+            const loadingOption = document.createElement("option");
+            loadingOption.value = "";
+            loadingOption.textContent = "Loading branches...";
+            loadingOption.selected = true;
+            branchSelect.appendChild(loadingOption);
+
+            try {
+                const data = await readConfig();
+                const branches = Array.isArray(data.branches) ? data.branches : [];
+                branchSelect.innerHTML = "";
+
+                if (branches.length === 0) {
+                    const option = document.createElement("option");
+                    option.value = "";
+                    option.textContent = "Branch Not Found";
+                    option.selected = true;
+                    branchSelect.appendChild(option);
+                    branchSelect.disabled = true;
+                    return;
+                }
+
+                const firstOption = document.createElement("option");
+                firstOption.value = "";
+                firstOption.textContent = "Select Branch";
+                firstOption.disabled = true;
+                firstOption.selected = true;
+                branchSelect.appendChild(firstOption);
+
+                branches.forEach(branch => {
+                    if (!branch || !branch.branch) return;
+                    const option = document.createElement("option");
+                    option.value = String(branch.branch);
+                    option.textContent = String(branch.branch);
+                    branchSelect.appendChild(option);
+                });
+
+                if (branchSelect.options.length <= 1) {
+                    branchSelect.innerHTML = "";
+                    const option = document.createElement("option");
+                    option.value = "";
+                    option.textContent = "Branch Not Found";
+                    option.selected = true;
+                    branchSelect.appendChild(option);
+                    branchSelect.disabled = true;
+                } else {
+                    branchSelect.disabled = false;
+                }
+
+            } catch (error) {
+                console.error("Load branches error:", error);
+                branchSelect.innerHTML = "";
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "Branch Not Found";
+                option.selected = true;
+                branchSelect.appendChild(option);
+                branchSelect.disabled = true;
+            }
+        }
+
+        /* =========================================================
+           LOGIN BRANCH
+        ========================================================= */
+        async function loginBranch(branchName, password) {
+            const data = await readConfig();
+            const branches = Array.isArray(data.branches) ? data.branches : [];
+
+            const branch = branches.find(item => {
+                if (!item) return false;
+                const storedBranch = String(item.branch || "").trim().toLowerCase();
+                const selectedBranch = String(branchName || "").trim().toLowerCase();
+                return storedBranch === selectedBranch;
+            });
+
+            if (!branch) {
+                throw new Error("Branch not found.");
+            }
+
+            if (String(branch.password || "") !== String(password || "")) {
+                throw new Error("Incorrect branch password.");
+            }
+
+            return branch;
+        }
+
+        /* =========================================================
+           LOGIN FORM SUBMIT
+        ========================================================= */
+        $("loginForm").addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const branchName = branchSelect.value;
+            const password = $("loginPassword").value.trim();
+            const button = $("loginButton");
+            const message = $("loginMessage");
+
+            message.textContent = "";
+
+            if (!branchName) {
+                setMessage(message, "Please select a branch.");
+                branchSelect.focus();
+                return;
+            }
+
+            if (!password) {
+                setMessage(message, "Please enter the branch password.");
+                $("loginPassword").focus();
+                return;
+            }
+
+            setLoading(button, true, "Sign In");
+
+            try {
+                const branch = await loginBranch(branchName, password);
+
+                sessionStorage.setItem("pgb_branch", JSON.stringify({
+                    branch: branch.branch || "",
+                    superviser: branch.superviser || "",
+                    location: branch.location || "",
+                    phone: branch.phone || "",
+                    email: branch.email || ""
+                }));
+
+                setMessage(message, "Login successful. Opening dashboard...", "success");
+
+                setTimeout(() => {
+                    sessionStorage.setItem("branch", branchName);
+                    window.location.href = "dashboard.html";
+                }, 500);
+
+            } catch (error) {
+                console.error("Login error:", error);
+                setMessage(message, error.message || "Unable to login.");
+            } finally {
+                setLoading(button, false, "Sign In");
+            }
+        });
+
+        /* =========================================================
+           REGISTER FORM SUBMIT
+        ========================================================= */
+        $("registerForm").addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const button = $("registerButton");
+            const message = $("registerMessage");
+
+            const branchName = $("branchName").value.trim();
+            const superviserName = $("supervisorName").value.trim();
+            const location = $("location").value.trim();
+            const phone = $("phone").value.trim();
+            const email = $("email").value.trim();
+            const password = $("createPassword").value;
+
+            message.textContent = "";
+
+            if (!branchName || !superviserName || !location || !phone || !email || !password) {
+                setMessage(message, "Please complete all required fields.");
+                return;
+            }
+
+            if (password.length < 6) {
+                setMessage(message, "Password must contain at least 6 characters.");
+                $("createPassword").focus();
+                return;
+            }
+
+            setLoading(button, true, "Register Campus");
+
+            try {
+                let data;
+                try {
+                    data = await readConfig();
+                } catch (error) {
+                    data = { branches: [] };
+                }
+
+                if (!data || typeof data !== "object") data = {};
+                if (!Array.isArray(data.branches)) data.branches = [];
+
+                const duplicate = data.branches.some(item => {
+                    if (!item) return false;
+                    return String(item.branch || "").trim().toLowerCase() === branchName.toLowerCase();
+                });
+
+                if (duplicate) {
+                    throw new Error("This branch name already exists.");
+                }
+
+                const newBranch = {
+                    branch: branchName,
+                    superviser: superviserName,
+                    location: location,
+                    phone: phone,
+                    email: email,
+                    password: password
+                };
+
+                data.branches.push(newBranch);
+                await saveConfig(data);
+
+                setMessage(message, "Branch registered successfully. You can now login.", "success");
+                $("registerForm").reset();
+
+                await loadBranches();
+
+                setTimeout(() => {
+                    showView("login");
+                }, 800);
+
+            } catch (error) {
+                console.error("Registration error:", error);
+                setMessage(message, error.message || "Branch cannot be created.");
+            } finally {
+                setLoading(button, false, "Register Campus");
+            }
+        });
+
+        /* =========================================================
+           INITIAL LOAD
+        ========================================================= */
+        window.addEventListener("load", async () => {
+            setTimeout(() => {
+                $("loader").classList.add("hide");
+            }, 450);
+
+            await loadBranches();
+        });
+    </script>
+</body>
+
+</html>
