@@ -34,495 +34,204 @@
     <style>
         /* ===== CUSTOM CONFIRM DIALOG ===== */
         .custom-confirm-overlay {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: rgba(15, 23, 42, 0.65);
             backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 1.5rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s, visibility 0.25s;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; padding: 1.5rem;
+            opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s;
         }
-
-        .custom-confirm-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .custom-confirm-overlay.active { opacity: 1; visibility: visible; }
         .custom-confirm-box {
-            background: #fff;
-            border-radius: 1.75rem;
-            max-width: 420px;
-            width: 100%;
-            padding: 2rem 1.75rem 1.5rem;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+            background: #fff; border-radius: 1.75rem; max-width: 420px; width: 100%;
+            padding: 2rem 1.75rem 1.5rem; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.5);
             transform: scale(0.92) translateY(12px);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            text-align: center; position: relative; overflow: hidden;
         }
-
-        .custom-confirm-overlay.active .custom-confirm-box {
-            transform: scale(1) translateY(0);
-        }
-
+        .custom-confirm-overlay.active .custom-confirm-box { transform: scale(1) translateY(0); }
         .custom-confirm-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
             background: linear-gradient(90deg, #fdd803, #d4b402, #fdd803);
         }
-
         .confirm-icon {
-            width: 65px;
-            height: 65px;
-            margin: 0 auto 1rem;
-            background: #fef9c3;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            color: #b45309;
-            border: 3px solid #fde047;
-            box-shadow: 0 8px 16px -6px rgba(253, 216, 3, 0.3);
+            width: 65px; height: 65px; margin: 0 auto 1rem; background: #fef9c3;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.75rem; color: #b45309; border: 3px solid #fde047;
+            box-shadow: 0 8px 16px -6px rgba(253,216,3,0.3);
         }
-
-        .confirm-title {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-        }
-
-        .confirm-message {
-            font-size: 0.95rem;
-            color: #475569;
-            line-height: 1.55;
-            margin-bottom: 1.5rem;
-        }
-
-        .confirm-actions {
-            display: flex;
-            gap: 0.75rem;
-            justify-content: center;
-        }
-
+        .confirm-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; }
+        .confirm-message { font-size: 0.95rem; color: #475569; line-height: 1.55; margin-bottom: 1.5rem; }
+        .confirm-actions { display: flex; gap: 0.75rem; justify-content: center; }
         .confirm-btn {
-            flex: 1;
-            border: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 0.75rem 1.25rem;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            font-family: inherit;
+            flex: 1; border: none; font-weight: 600; font-size: 0.9rem;
+            padding: 0.75rem 1.25rem; border-radius: 60px; cursor: pointer;
+            transition: all 0.2s; display: inline-flex; align-items: center;
+            justify-content: center; gap: 0.4rem; font-family: inherit;
         }
-
-        .confirm-btn:active {
-            transform: scale(0.96);
-        }
-
-        .confirm-btn-cancel {
-            background: #f1f5f9;
-            color: #334155;
-            border: 1.5px solid #e2e8f0;
-        }
-
-        .confirm-btn-cancel:hover {
-            background: #e2e8f0;
-        }
-
-        .confirm-btn-confirm {
-            background: #1e293b;
-            color: #fff;
-        }
-
-        .confirm-btn-confirm:hover {
-            background: #0f172a;
-        }
-
-        .confirm-btn-confirm.danger {
-            background: #dc2626;
-        }
-
-        .confirm-btn-confirm.danger:hover {
-            background: #b91c1c;
-        }
-
-        .confirm-btn-confirm.success {
-            background: #16a34a;
-        }
-
-        .confirm-btn-confirm.success:hover {
-            background: #15803d;
-        }
-
-        .confirm-btn-confirm.gold {
-            background: #fdd803;
-            color: #1a1a1a;
-        }
-
-        .confirm-btn-confirm.gold:hover {
-            background: #d4b402;
-        }
+        .confirm-btn:active { transform: scale(0.96); }
+        .confirm-btn-cancel { background: #f1f5f9; color: #334155; border: 1.5px solid #e2e8f0; }
+        .confirm-btn-cancel:hover { background: #e2e8f0; }
+        .confirm-btn-confirm { background: #1e293b; color: #fff; }
+        .confirm-btn-confirm:hover { background: #0f172a; }
+        .confirm-btn-confirm.danger { background: #dc2626; }
+        .confirm-btn-confirm.danger:hover { background: #b91c1c; }
+        .confirm-btn-confirm.success { background: #16a34a; }
+        .confirm-btn-confirm.success:hover { background: #15803d; }
+        .confirm-btn-confirm.gold { background: #fdd803; color: #1a1a1a; }
+        .confirm-btn-confirm.gold:hover { background: #d4b402; }
 
         /* ===== APP STYLES ===== */
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #f1f5f9;
-            overflow-x: hidden;
-        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f1f5f9; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #fdd803; }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #e2e8f0;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 8px;
-        }
-
-        /* Loading screen */
         #loadingScreen {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: linear-gradient(135deg, #1a1a1a 0%, #0f172a 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.6s, visibility 0.6s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 99999; transition: opacity 0.6s, visibility 0.6s;
         }
-
-        #loadingScreen.hidden-loader {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
+        #loadingScreen.hidden-loader { opacity: 0; visibility: hidden; pointer-events: none; }
         .loader-ring {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 130px; height: 130px; border-radius: 50%;
+            position: relative; display: flex; align-items: center; justify-content: center;
         }
-
         .loader-ring::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            border: 4px solid transparent;
-            border-top-color: #fdd803;
-            border-right-color: #fdd803;
+            content: ''; position: absolute; inset: 0; border-radius: 50%;
+            border: 4px solid transparent; border-top-color: #fdd803; border-right-color: #fdd803;
             animation: spinRing 1s linear infinite;
         }
-
         .loader-ring::after {
-            content: '';
-            position: absolute;
-            inset: 12px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            border-bottom-color: #d4b402;
-            border-left-color: #d4b402;
+            content: ''; position: absolute; inset: 12px; border-radius: 50%;
+            border: 3px solid transparent; border-bottom-color: #d4b402; border-left-color: #d4b402;
             animation: spinRing 1.6s linear infinite reverse;
         }
-
-        @keyframes spinRing {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
+        @keyframes spinRing { to { transform: rotate(360deg); } }
         .loader-logo {
-            width: 78px;
-            height: 78px;
-            border-radius: 50%;
-            background: #fff;
-            padding: 4px;
-            object-fit: contain;
-            box-shadow: 0 0 30px rgba(253, 216, 3, 0.5);
+            width: 78px; height: 78px; border-radius: 50%; background: #fff;
+            padding: 4px; object-fit: contain; box-shadow: 0 0 30px rgba(253,216,3,0.5);
             animation: pulseSoft 1.6s infinite;
         }
-
-        .loader-title {
-            color: #fdd803;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 1.75rem;
-        }
-
-        .loader-subtitle {
-            color: #94a3b8;
-            font-size: 0.8rem;
-            margin-top: 0.35rem;
-            letter-spacing: 1px;
-        }
-
+        .loader-title { color: #fdd803; font-size: 1.5rem; font-weight: 700; margin-top: 1.75rem; }
+        .loader-subtitle { color: #94a3b8; font-size: 0.8rem; margin-top: 0.35rem; letter-spacing: 1px; }
         .loader-progress {
-            margin-top: 2rem;
-            width: 240px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 99px;
-            overflow: hidden;
+            margin-top: 2rem; width: 240px; height: 4px;
+            background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden;
         }
-
         .loader-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #fdd803, #d4b402);
-            width: 0%;
-            border-radius: 99px;
-            animation: progressBar 2.4s ease-in-out forwards;
+            height: 100%; background: linear-gradient(90deg, #fdd803, #d4b402);
+            width: 0%; border-radius: 99px; animation: progressBar 2.4s ease-in-out forwards;
         }
-
         @keyframes progressBar {
-            0% {
-                width: 0%;
-            }
-
-            30% {
-                width: 40%;
-            }
-
-            60% {
-                width: 70%;
-            }
-
-            100% {
-                width: 100%;
-            }
+            0% { width: 0%; } 30% { width: 40%; } 60% { width: 70%; } 100% { width: 100%; }
         }
 
-        /* ===== OPERATION OVERLAY (appears during saving/loading operations) ===== */
         #opOverlay {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 99997;
-            opacity: 0;
-            visibility: hidden;
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 99997; opacity: 0; visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
         }
-
-        #opOverlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        #opOverlay.active { opacity: 1; visibility: visible; }
         .op-spinner {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            border: 4px solid rgba(253, 216, 3, 0.15);
-            border-top-color: #fdd803;
-            border-right-color: #fdd803;
+            width: 64px; height: 64px; border-radius: 50%;
+            border: 4px solid rgba(253,216,3,0.15);
+            border-top-color: #fdd803; border-right-color: #fdd803;
             animation: spinRing 0.8s linear infinite;
         }
+        .op-text { color: #fff; font-size: 0.9rem; font-weight: 600; margin-top: 1.2rem; letter-spacing: 0.3px; }
+        .op-subtext { color: #cbd5e1; font-size: 0.75rem; margin-top: 0.3rem; }
 
-        .op-text {
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-top: 1.2rem;
-            letter-spacing: 0.3px;
-        }
-
-        .op-subtext {
-            color: #cbd5e1;
-            font-size: 0.75rem;
-            margin-top: 0.3rem;
-        }
-
-        /* Sidebar — hidden by default */
         .sidebar {
-            transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
-            transform: translateX(-100%);
-            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+            transition: transform 0.32s cubic-bezier(0.2,0.9,0.3,1);
+            transform: translateX(-100%); box-shadow: 4px 0 24px rgba(0,0,0,0.25);
         }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .main-content {
-            transition: margin-left 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
-            margin-left: 0;
-        }
-
-        @media (min-width: 1024px) {
-            .main-content.shifted {
-                margin-left: 16rem;
-            }
-        }
-
+        .sidebar.open { transform: translateX(0); }
+        .main-content { transition: margin-left 0.32s cubic-bezier(0.2,0.9,0.3,1); margin-left: 0; }
+        @media (min-width: 1024px) { .main-content.shifted { margin-left: 16rem; } }
         .sidebar-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 25;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+            z-index: 25; opacity: 0; visibility: hidden; transition: opacity 0.25s;
         }
-
-        .sidebar-backdrop.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .nav-item {
-            transition: all 0.2s;
-            border-left: 4px solid transparent;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            background: #2d2d2d;
-            border-left-color: #fdd803;
-            color: #fdd803;
-        }
-
+        .sidebar-backdrop.active { opacity: 1; visibility: visible; }
+        .nav-item { transition: all 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: #2d2d2d; border-left-color: #fdd803; color: #fdd803; }
         .btn-gold {
-            background: #fdd803;
-            color: #1a1a1a;
-            font-weight: 600;
-            transition: 0.2s;
+            background: #fdd803; color: #1a1a1a; font-weight: 600; transition: 0.2s;
         }
-
         .btn-gold:hover {
-            background: #d4b402;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 12px -4px rgba(253, 216, 3, 0.4);
+            background: #d4b402; transform: translateY(-1px);
+            box-shadow: 0 6px 12px -4px rgba(253,216,3,0.4);
         }
-
-        .btn-gold:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         #voucherPreview {
-            background: white;
-            border: 2px solid #fdd803;
-            padding: 30px;
-            max-width: 800px;
-            margin: 0 auto;
+            background: white; border: 2px solid #fdd803; padding: 30px;
+            max-width: 800px; margin: 0 auto;
         }
-
         @media print {
-            body * {
-                visibility: hidden;
-            }
-
-            #voucherPreview,
-            #voucherPreview * {
-                visibility: visible;
-            }
-
-            #voucherPreview {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                border: none;
-            }
+            body * { visibility: hidden; }
+            #voucherPreview, #voucherPreview * { visibility: visible; }
+            #voucherPreview { position: absolute; left: 0; top: 0; width: 100%; border: none; }
         }
-
-        .modal {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-        }
-
-        .stat-card {
-            transition: transform 0.25s, box-shadow 0.25s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.18);
-        }
-
-        .paid-badge {
-            background: #dcfce7;
-            color: #166534;
-            padding: 2px 8px;
-            border-radius: 99px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .due-badge {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 2px 8px;
-            border-radius: 99px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
+        .modal { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+        .stat-card { transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 16px 30px -12px rgba(0,0,0,0.18); }
+        .paid-badge { background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; }
+        .due-badge { background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; }
+        .partial-badge { background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; }
+        .na-badge { background: #f1f5f9; color: #64748b; padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; }
 
         #toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
+            position: fixed; bottom: 24px; left: 50%;
             transform: translateX(-50%) translateY(120%);
-            background: #0f172a;
-            color: #fff;
-            padding: 0.85rem 1.5rem;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            z-index: 99998;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.35);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: #0f172a; color: #fff;
+            padding: 0.85rem 1.5rem; border-radius: 60px;
+            font-size: 0.85rem; z-index: 99998;
+            display: flex; align-items: center; gap: 0.5rem;
+            box-shadow: 0 12px 24px -6px rgba(0,0,0,0.35);
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
             max-width: 90vw;
         }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+        #toast.error { background: #b91c1c; }
+        #toast.success { background: #15803d; }
 
-        #toast.show {
-            transform: translateX(-50%) translateY(0);
+        .tab-btn {
+            padding: 0.6rem 1.1rem; font-size: 0.82rem; font-weight: 600;
+            color: #64748b; border-bottom: 3px solid transparent;
+            transition: all 0.2s; background: transparent; border-radius: 0;
+            cursor: pointer; font-family: inherit;
         }
+        .tab-btn:hover { color: #b45309; background: #fefce8; }
+        .tab-btn.active { color: #b45309; border-bottom-color: #fdd803; background: #fefce8; }
 
-        #toast.error {
-            background: #b91c1c;
+        .chip {
+            padding: 0.4rem 0.9rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+            border: 1.5px solid #e2e8f0; background: #fff; color: #475569;
+            cursor: pointer; transition: all 0.18s; font-family: inherit;
         }
+        .chip:hover { border-color: #fde047; color: #b45309; }
+        .chip.active { background: #fdd803; border-color: #fdd803; color: #1a1a1a; }
+        .chip.active.danger { background: #dc2626; border-color: #dc2626; color:#fff; }
+        .chip.active.warn { background: #f59e0b; border-color: #f59e0b; color:#fff; }
+        .chip.active.ok { background: #16a34a; border-color: #16a34a; color:#fff; }
 
-        #toast.success {
-            background: #15803d;
-        }
+        .search-wrap { position: relative; }
+        .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem; }
+        .search-wrap input { padding-left: 34px; }
+
+        .fee-input { border: 1px solid #e2e8f0; padding: 0.5rem 0.7rem; border-radius: 0.5rem; font-size: 0.85rem; width: 100%; }
+        .fee-input:focus { outline: none; border-color: #fdd803; box-shadow: 0 0 0 3px rgba(253,216,3,0.18); }
+
+        .mini-table th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.4px; }
+        .mini-table td, .mini-table th { padding: 0.55rem 0.6rem; }
     </style>
 </head>
 
@@ -536,9 +245,7 @@
         </div>
         <h1 class="loader-title">Dar-E-Arqam</h1>
         <p class="loader-subtitle">SCHOOL MANAGEMENT SUITE</p>
-        <div class="loader-progress">
-            <div class="loader-progress-bar"></div>
-        </div>
+        <div class="loader-progress"><div class="loader-progress-bar"></div></div>
     </div>
 
     <!-- ========== OPERATION OVERLAY ========== -->
@@ -555,8 +262,7 @@
     <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
 
     <!-- ========== SIDEBAR ========== -->
-    <aside id="sidebar"
-        class="sidebar fixed top-0 left-0 w-64 h-full bg-dark text-white z-30 overflow-y-auto flex flex-col">
+    <aside id="sidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-dark text-white z-30 overflow-y-auto flex flex-col">
         <div class="p-5 border-b border-gray-700 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="drq.png" alt="DRQ" class="w-10 h-10 rounded-full bg-white p-0.5 object-contain"
@@ -572,122 +278,107 @@
         </div>
 
         <nav class="mt-4 flex-1">
-            <a href="#" onclick="showSection('dashboard'); closeSidebar();"
-                class="nav-item active flex items-center px-5 py-3 text-sm"><i class="fas fa-chart-pie w-6"></i>
-                Dashboard</a>
-            <a href="#" onclick="showSection('students'); closeSidebar();"
-                class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-user-graduate w-6"></i>
-                Students</a>
-            <a href="#" onclick="showSection('staff'); closeSidebar();"
-                class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-chalkboard-teacher w-6"></i> Staff
-                & Payroll</a>
-            <a href="#" onclick="showSection('fees'); closeSidebar();"
-                class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-money-bill-wave w-6"></i> Fee
-                Collection</a>
-            <a href="#" onclick="showSection('expenses'); closeSidebar();"
-                class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-file-invoice-dollar w-6"></i>
-                Expenses</a>
-            <a href="#" onclick="showSection('assets'); closeSidebar();"
-                class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-box-open w-6"></i> Assets</a>
-            <a href="#" onclick="showSection('reports'); closeSidebar();"
-                class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-file-pdf w-6"></i> Reports &
-                Vouchers</a>
-            <a href="#" onclick="showSection('settings'); closeSidebar();"
-                class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-cog w-6"></i> Settings</a>
+            <a href="#" onclick="showSection('dashboard'); closeSidebar();" class="nav-item active flex items-center px-5 py-3 text-sm"><i class="fas fa-chart-pie w-6"></i> Dashboard</a>
+            <a href="#" onclick="showSection('students'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-user-graduate w-6"></i> Students</a>
+            <a href="#" onclick="showSection('ledger'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-table-list w-6"></i> Monthly Ledger</a>
+            <a href="#" onclick="showSection('staff'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-chalkboard-teacher w-6"></i> Staff &amp; Payroll</a>
+            <a href="#" onclick="showSection('fees'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-money-bill-wave w-6"></i> Fee Collection</a>
+            <a href="#" onclick="showSection('expenses'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-file-invoice-dollar w-6"></i> Expenses</a>
+            <a href="#" onclick="showSection('assets'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-box-open w-6"></i> Assets</a>
+            <a href="#" onclick="showSection('reports'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-file-pdf w-6"></i> Reports &amp; Vouchers</a>
+            <a href="#" onclick="showSection('settings'); closeSidebar();" class="nav-item flex items-center px-5 py-3 text-sm"><i class="fas fa-cog w-6"></i> Settings</a>
 
-            <a href="#" onclick="handleLogout(event)"
-                class="nav-item flex items-center px-5 py-3 text-sm text-red-400 mt-8 border-t border-gray-700 pt-4"><i
-                    class="fas fa-sign-out-alt w-6"></i> Logout</a>
+            <a href="#" onclick="handleLogout(event)" class="nav-item flex items-center px-5 py-3 text-sm text-red-400 mt-8 border-t border-gray-700 pt-4"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
         </nav>
         <a href="#" style="margin-bottom: 10px;"
             onclick="event.preventDefault(); window.location.href='https://fridaysoftwaretechnology.github.io/admin/';"
-            class="nav-item flex items-center px-5 py-3 text-sm text-green-300 bg-gradient-to-r from-black/40 via-green-900/40 to-black/40 bg-[length:200%_100%] hover:text-green-400 hover:from-black/50 hover:via-green-700/50 hover:to-black/50 hover:border-l-green-500 transition-all duration-300"><i
-                class="fas fa-code w-6"></i> Developer</a>
+            class="nav-item flex items-center px-5 py-3 text-sm text-green-300 bg-gradient-to-r from-black/40 via-green-900/40 to-black/40 bg-[length:200%_100%] hover:text-green-400 hover:from-black/50 hover:via-green-700/50 hover:to-black/50 hover:border-l-green-500 transition-all duration-300"><i class="fas fa-code w-6"></i> Developer</a>
         <div class="p-4 text-[10px] text-gray-500 border-t border-gray-800">
             <i class="fas fa-circle text-green-500 text-[8px] mr-1"></i> @2026 Friday Software Official
         </div>
-        
     </aside>
 
     <!-- ========== MAIN CONTENT ========== -->
     <main id="mainContent" class="main-content min-h-screen p-4 lg:p-6">
-        <header
-            class="flex flex-wrap justify-between items-center bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100">
+        <header class="flex flex-wrap justify-between items-center bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100">
             <div class="flex items-center gap-3">
-                <button onclick="openSidebar()"
-                    class="text-2xl text-gray-600 hover:text-gold focus:outline-none transition" title="Open menu">
+                <button onclick="openSidebar()" class="text-2xl text-gray-600 hover:text-gold focus:outline-none transition" title="Open menu">
                     <i class="fas fa-bars"></i>
                 </button>
                 <div>
                     <h2 id="pageTitle" class="text-xl font-bold text-gray-800">Dashboard</h2>
-                    <p class="text-xs text-gray-500">Dar-E-Arqam School · <span id="branchDisplay"
-                            class="font-medium text-goldDark">Tamboli Campus</span></p>
+                    <p class="text-xs text-gray-500">Dar-E-Arqam School · <span id="branchDisplay" class="font-medium text-goldDark">Tamboli Campus</span></p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <span id="connBadge"
-                    class="hidden md:inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-500">
+                <span id="connBadge" class="hidden md:inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-500">
                     <i class="fas fa-circle text-[6px]"></i> checking...
                 </span>
-                <button onclick="syncAllData()" class="btn-gold px-4 py-2 rounded-lg text-sm shadow-sm" id="syncBtn"
-                    title="Sync with server">
+                <button onclick="syncAllData()" class="btn-gold px-4 py-2 rounded-lg text-sm shadow-sm" id="syncBtn" title="Sync with server">
                     <i class="fas fa-rotate mr-2"></i>Sync
                 </button>
-                <button onclick="handleLogout(event)"
-                    class="bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-lg text-sm text-gray-700 transition"
-                    title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+                <button onclick="handleLogout(event)" class="bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-lg text-sm text-gray-700 transition" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </header>
 
         <!-- ========== DASHBOARD ========== -->
         <section id="dashboard" class="content-section">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
                 <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-gold animate-float-up">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-gray-500 text-xs uppercase tracking-wider">Total Students</h3>
+                            <h3 class="text-gray-500 text-[11px] uppercase tracking-wider">Total Students</h3>
                             <p class="text-3xl font-bold text-gray-800" id="dashTotalStudents">0</p>
                             <p class="text-xs text-green-600 mt-1"><span id="dashActiveStudents">0</span> active</p>
                         </div>
-                        <div class="w-12 h-12 rounded-2xl bg-gold/15 flex items-center justify-center">
-                            <i class="fas fa-users text-2xl text-goldDark"></i>
+                        <div class="w-11 h-11 rounded-2xl bg-gold/15 flex items-center justify-center">
+                            <i class="fas fa-users text-xl text-goldDark"></i>
                         </div>
                     </div>
                 </div>
-                <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-blue-500 animate-float-up"
-                    style="animation-delay:.05s">
+                <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-blue-500 animate-float-up" style="animation-delay:.05s">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-gray-500 text-xs uppercase tracking-wider">Total Staff</h3>
+                            <h3 class="text-gray-500 text-[11px] uppercase tracking-wider">Total Staff</h3>
                             <p class="text-3xl font-bold text-gray-800" id="dashTotalStaff">0</p>
                         </div>
-                        <div class="w-12 h-12 rounded-2xl bg-blue-500/15 flex items-center justify-center">
-                            <i class="fas fa-chalkboard-teacher text-2xl text-blue-600"></i>
+                        <div class="w-11 h-11 rounded-2xl bg-blue-500/15 flex items-center justify-center">
+                            <i class="fas fa-chalkboard-teacher text-xl text-blue-600"></i>
                         </div>
                     </div>
                 </div>
-                <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-green-500 animate-float-up"
-                    style="animation-delay:.1s">
+                <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-green-500 animate-float-up" style="animation-delay:.1s">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-gray-500 text-xs uppercase tracking-wider">Fees (This Month)</h3>
-                            <p class="text-3xl font-bold text-green-600">Rs. <span id="dashFeesCollected">0</span></p>
+                            <h3 class="text-gray-500 text-[11px] uppercase tracking-wider">Fees (This Month)</h3>
+                            <p class="text-2xl font-bold text-green-600">Rs. <span id="dashFeesCollected">0</span></p>
                         </div>
-                        <div class="w-12 h-12 rounded-2xl bg-green-500/15 flex items-center justify-center">
-                            <i class="fas fa-hand-holding-usd text-2xl text-green-600"></i>
+                        <div class="w-11 h-11 rounded-2xl bg-green-500/15 flex items-center justify-center">
+                            <i class="fas fa-hand-holding-usd text-xl text-green-600"></i>
                         </div>
                     </div>
                 </div>
-                <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-red-500 animate-float-up"
-                    style="animation-delay:.15s">
+                <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-amber-500 animate-float-up" style="animation-delay:.15s">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-gray-500 text-xs uppercase tracking-wider">Net Position</h3>
-                            <p class="text-3xl font-bold text-gray-800">Rs. <span id="dashNetPosition">0</span></p>
-                            <p class="text-xs text-gray-400">Fees − Expenses</p>
+                            <h3 class="text-gray-500 text-[11px] uppercase tracking-wider">Outstanding (Month)</h3>
+                            <p class="text-2xl font-bold text-amber-600">Rs. <span id="dashOutstanding">0</span></p>
+                            <p class="text-xs text-amber-600 mt-1"><span id="dashOutstandingCount">0</span> students due</p>
                         </div>
-                        <div class="w-12 h-12 rounded-2xl bg-red-500/15 flex items-center justify-center">
-                            <i class="fas fa-chart-line text-2xl text-red-500"></i>
+                        <div class="w-11 h-11 rounded-2xl bg-amber-500/15 flex items-center justify-center">
+                            <i class="fas fa-triangle-exclamation text-xl text-amber-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card bg-white p-5 rounded-2xl shadow-sm border-l-4 border-red-500 animate-float-up" style="animation-delay:.2s">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-gray-500 text-[11px] uppercase tracking-wider">Net Position</h3>
+                            <p class="text-2xl font-bold text-gray-800">Rs. <span id="dashNetPosition">0</span></p>
+                            <p class="text-xs text-gray-400">All fees − expenses</p>
+                        </div>
+                        <div class="w-11 h-11 rounded-2xl bg-red-500/15 flex items-center justify-center">
+                            <i class="fas fa-chart-line text-xl text-red-500"></i>
                         </div>
                     </div>
                 </div>
@@ -695,36 +386,41 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 <div class="bg-white p-5 rounded-2xl shadow-sm lg:col-span-2">
-                    <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-chart-bar text-gold mr-2"></i>Monthly
-                        Fee Collection</h3>
+                    <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-chart-bar text-gold mr-2"></i>Monthly Fee Collection</h3>
                     <canvas id="feeChart" height="150"></canvas>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-sm">
-                    <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-shapes text-gold mr-2"></i>Class
-                        Distribution</h3>
+                    <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-shapes text-gold mr-2"></i>Class Distribution</h3>
                     <canvas id="classChart" height="150"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+                <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+                    <h3 class="font-semibold text-gray-700"><i class="fas fa-clock-rotate-left text-gold mr-2"></i>Recently Added Students</h3>
+                    <button onclick="showSection('students')" class="text-sm text-blue-600 hover:underline">View all</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                            <tr><th class="p-3">Name</th><th class="p-3">Father</th><th class="p-3">Class</th><th class="p-3">Phone</th><th class="p-3">Monthly Fee</th></tr>
+                        </thead>
+                        <tbody id="recentStudentsBody"></tbody>
+                    </table>
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
                 <div class="p-5 border-b border-gray-100 flex justify-between items-center">
-                    <h3 class="font-semibold text-gray-700"><i
-                            class="fas fa-clock-rotate-left text-gold mr-2"></i>Recently Added Students</h3>
-                    <button onclick="showSection('students')" class="text-sm text-blue-600 hover:underline">View
-                        all</button>
+                    <h3 class="font-semibold text-gray-700"><i class="fas fa-bell text-amber-500 mr-2"></i>Outstanding Fees — <span id="dashOutstandingMonth"></span></h3>
+                    <button onclick="showSection('ledger')" class="text-sm text-blue-600 hover:underline">Open Ledger</button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
                         <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
-                            <tr>
-                                <th class="p-3">Name</th>
-                                <th class="p-3">Father</th>
-                                <th class="p-3">Class</th>
-                                <th class="p-3">Phone</th>
-                                <th class="p-3">Fee</th>
-                            </tr>
+                            <tr><th class="p-3">Student</th><th class="p-3">Class</th><th class="p-3">Payable</th><th class="p-3">Paid</th><th class="p-3">Balance</th></tr>
                         </thead>
-                        <tbody id="recentStudentsBody"></tbody>
+                        <tbody id="dashOutstandingBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -732,46 +428,49 @@
 
         <!-- ========== STUDENTS ========== -->
         <section id="students" class="content-section hidden">
-            <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
-                <div class="flex gap-2">
-                    <select id="filterStudentClass" class="border p-2 rounded-lg text-sm bg-white shadow-sm"
-                        onchange="renderStudents()">
+            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3">
+                    <div class="search-wrap xl:col-span-2">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchStudent" oninput="renderStudents()" placeholder="Search name, father, phone or ID..." class="border p-2 rounded-lg text-sm w-full">
+                    </div>
+                    <select id="filterStudentClass" class="border p-2 rounded-lg text-sm bg-white" onchange="renderStudents()">
                         <option value="All">All Classes</option>
-                        <option>Play</option>
-                        <option>Nursery</option>
-                        <option>KG</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
+                        <option>Play</option><option>Nursery</option><option>KG</option>
+                        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                        <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
                     </select>
-                    <select id="filterStudentStatus" class="border p-2 rounded-lg text-sm bg-white shadow-sm"
-                        onchange="renderStudents()">
-                        <option value="All">All Status</option>
-                        <option>Active</option>
-                        <option>Suspended</option>
-                        <option>Deleted</option>
+                    <select id="filterStudentStatus" class="border p-2 rounded-lg text-sm bg-white" onchange="renderStudents()">
+                        <option value="All">All Status</option><option>Active</option><option>Suspended</option><option>Deleted</option>
+                    </select>
+                    <select id="filterStudentFee" class="border p-2 rounded-lg text-sm bg-white" onchange="renderStudents()">
+                        <option value="All">All Fee Status</option>
+                        <option value="Due">Outstanding (Due)</option>
+                        <option value="Partial">Partial Paid</option>
+                        <option value="Paid">Fully Paid</option>
                     </select>
                 </div>
-                <button onclick="openModal('studentModal')" class="btn-gold px-4 py-2 rounded-lg text-sm shadow"><i
-                        class="fas fa-plus mr-1"></i>Add Student</button>
+                <div class="flex flex-wrap items-center gap-3 mt-3">
+                    <span class="text-xs text-gray-500 font-semibold">Fee period:</span>
+                    <select id="studentMonth" class="border p-1.5 rounded-lg text-xs bg-white" onchange="renderStudents()"></select>
+                    <select id="studentYear" class="border p-1.5 rounded-lg text-xs bg-white" onchange="renderStudents()"></select>
+                    <div class="flex-1"></div>
+                    <span id="studentCountLabel" class="text-xs text-gray-500"></span>
+                    <button onclick="openModal('studentModal')" class="btn-gold px-4 py-2 rounded-lg text-sm shadow"><i class="fas fa-plus mr-1"></i>Add Student</button>
+                </div>
             </div>
             <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
                         <tr>
-                            <th class="p-3">Name</th>
+                            <th class="p-3">Student</th>
                             <th class="p-3">Father</th>
                             <th class="p-3">Class</th>
                             <th class="p-3">Phone</th>
-                            <th class="p-3">Monthly Fee</th>
-                            <th class="p-3">Status</th>
+                            <th class="p-3">Monthly</th>
+                            <th class="p-3">Paid</th>
+                            <th class="p-3">Balance</th>
+                            <th class="p-3">Fee Status</th>
                             <th class="p-3">Actions</th>
                         </tr>
                     </thead>
@@ -780,25 +479,88 @@
             </div>
         </section>
 
+        <!-- ========== MONTHLY LEDGER ========== -->
+        <section id="ledger" class="content-section hidden">
+            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4">
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="text-sm font-semibold text-gray-700"><i class="fas fa-calendar-days text-gold mr-2"></i>Ledger Period</span>
+                    <select id="ledgerMonth" class="border p-2 rounded-lg text-sm bg-white" onchange="renderLedger()"></select>
+                    <select id="ledgerYear" class="border p-2 rounded-lg text-sm bg-white" onchange="renderLedger()"></select>
+                    <div class="search-wrap flex-1 min-w-[220px]">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchLedger" oninput="renderLedger()" placeholder="Search student, father or phone..." class="border p-2 rounded-lg text-sm w-full">
+                    </div>
+                    <select id="ledgerClass" class="border p-2 rounded-lg text-sm bg-white" onchange="renderLedger()">
+                        <option value="All">All Classes</option>
+                        <option>Play</option><option>Nursery</option><option>KG</option>
+                        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                        <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+                    </select>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 mt-3">
+                    <button class="chip active" data-ledger-filter="All" onclick="setLedgerFilter('All', this)">All Students</button>
+                    <button class="chip danger" data-ledger-filter="Due" onclick="setLedgerFilter('Due', this)"><i class="fas fa-circle-exclamation mr-1"></i>Outstanding</button>
+                    <button class="chip warn" data-ledger-filter="Partial" onclick="setLedgerFilter('Partial', this)">Partial</button>
+                    <button class="chip ok" data-ledger-filter="Paid" onclick="setLedgerFilter('Paid', this)">Fully Paid</button>
+                    <div class="flex-1"></div>
+                    <button onclick="exportLedgerCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold"><i class="fas fa-file-csv mr-1"></i>Export CSV</button>
+                    <button onclick="markAllPaidPrompt()" class="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1.5 rounded-lg text-xs font-semibold"><i class="fas fa-list-check mr-1"></i>Bulk Collect</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-gold">
+                    <p class="text-[11px] uppercase text-gray-500 tracking-wider">Total Payable</p>
+                    <p class="text-xl font-bold text-goldDark">Rs. <span id="ledgerTotalPayable">0</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-emerald-500">
+                    <p class="text-[11px] uppercase text-gray-500 tracking-wider">Total Collected</p>
+                    <p class="text-xl font-bold text-emerald-700">Rs. <span id="ledgerTotalPaid">0</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-amber-500">
+                    <p class="text-[11px] uppercase text-gray-500 tracking-wider">Total Outstanding</p>
+                    <p class="text-xl font-bold text-amber-700">Rs. <span id="ledgerTotalBalance">0</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-rose-500">
+                    <p class="text-[11px] uppercase text-gray-500 tracking-wider">Students With Dues</p>
+                    <p class="text-xl font-bold text-rose-700"><span id="ledgerDueCount">0</span> <span class="text-sm font-normal text-gray-400">/ <span id="ledgerStudentCount">0</span></span></p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
+                <table class="w-full text-left text-sm mini-table">
+                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                        <tr>
+                            <th class="p-3">#</th>
+                            <th class="p-3">Student</th>
+                            <th class="p-3">Father</th>
+                            <th class="p-3">Class</th>
+                            <th class="p-3 text-right">Monthly Payable</th>
+                            <th class="p-3 text-right">Paid</th>
+                            <th class="p-3 text-right">Balance</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerBody"></tbody>
+                    <tfoot class="bg-yellow-50 font-bold text-yellow-900" id="ledgerFoot"></tfoot>
+                </table>
+            </div>
+        </section>
+
         <!-- ========== STAFF ========== -->
         <section id="staff" class="content-section hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-gray-700">Staff & Payroll</h3>
-                <button onclick="openModal('staffModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i
-                        class="fas fa-plus mr-1"></i>Add Staff</button>
+            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 flex flex-wrap items-center gap-3">
+                <div class="search-wrap flex-1 min-w-[220px]">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchStaff" oninput="renderStaff()" placeholder="Search staff by name, designation, subject..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <button onclick="openModal('staffModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i class="fas fa-plus mr-1"></i>Add Staff</button>
             </div>
             <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
-                        <tr>
-                            <th class="p-3">Name</th>
-                            <th class="p-3">Designation</th>
-                            <th class="p-3">Subject</th>
-                            <th class="p-3">Phone</th>
-                            <th class="p-3">Salary</th>
-                            <th class="p-3">Status</th>
-                            <th class="p-3">Actions</th>
-                        </tr>
+                        <tr><th class="p-3">Name</th><th class="p-3">Designation</th><th class="p-3">Subject</th><th class="p-3">Phone</th><th class="p-3">Salary</th><th class="p-3">This Month</th><th class="p-3">Actions</th></tr>
                     </thead>
                     <tbody id="staffTableBody"></tbody>
                 </table>
@@ -807,23 +569,19 @@
 
         <!-- ========== FEES ========== -->
         <section id="fees" class="content-section hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-gray-700">Fee Collection</h3>
-                <button onclick="openModal('feeModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i
-                        class="fas fa-plus mr-1"></i>Collect Fee</button>
+            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 flex flex-wrap items-center gap-3">
+                <div class="search-wrap flex-1 min-w-[220px]">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchFee" oninput="renderFees()" placeholder="Search by student, description or method..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <select id="filterFeeMonth" class="border p-2 rounded-lg text-sm bg-white" onchange="renderFees()"></select>
+                <select id="filterFeeYear" class="border p-2 rounded-lg text-sm bg-white" onchange="renderFees()"></select>
+                <button onclick="openModal('feeModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i class="fas fa-plus mr-1"></i>Collect Fee</button>
             </div>
             <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
-                        <tr>
-                            <th class="p-3">Date</th>
-                            <th class="p-3">Student</th>
-                            <th class="p-3">Month/Year</th>
-                            <th class="p-3">Description</th>
-                            <th class="p-3">Amount</th>
-                            <th class="p-3">Method</th>
-                            <th class="p-3">Actions</th>
-                        </tr>
+                        <tr><th class="p-3">Date</th><th class="p-3">Student</th><th class="p-3">Month/Year</th><th class="p-3">Description</th><th class="p-3">Amount</th><th class="p-3">Method</th><th class="p-3">Actions</th></tr>
                     </thead>
                     <tbody id="feesTableBody"></tbody>
                 </table>
@@ -832,22 +590,22 @@
 
         <!-- ========== EXPENSES ========== -->
         <section id="expenses" class="content-section hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-gray-700">Expenses</h3>
-                <button onclick="openModal('expenseModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i
-                        class="fas fa-plus mr-1"></i>Add Expense</button>
+            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 flex flex-wrap items-center gap-3">
+                <div class="search-wrap flex-1 min-w-[220px]">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchExpense" oninput="renderExpenses()" placeholder="Search expenses..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <select id="filterExpenseCategory" class="border p-2 rounded-lg text-sm bg-white" onchange="renderExpenses()">
+                    <option value="All">All Categories</option>
+                    <option>Salary</option><option>Utilities</option><option>Rent</option>
+                    <option>Maintenance</option><option>Supplies</option><option>Other</option>
+                </select>
+                <button onclick="openModal('expenseModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i class="fas fa-plus mr-1"></i>Add Expense</button>
             </div>
             <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
-                        <tr>
-                            <th class="p-3">Date</th>
-                            <th class="p-3">Category</th>
-                            <th class="p-3">Description</th>
-                            <th class="p-3">Amount</th>
-                            <th class="p-3">Method</th>
-                            <th class="p-3">Actions</th>
-                        </tr>
+                        <tr><th class="p-3">Date</th><th class="p-3">Category</th><th class="p-3">Description</th><th class="p-3">Amount</th><th class="p-3">Method</th><th class="p-3">Actions</th></tr>
                     </thead>
                     <tbody id="expensesTableBody"></tbody>
                 </table>
@@ -856,22 +614,17 @@
 
         <!-- ========== ASSETS ========== -->
         <section id="assets" class="content-section hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-gray-700">Assets</h3>
-                <button onclick="openModal('assetModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i
-                        class="fas fa-plus mr-1"></i>Add Asset</button>
+            <div class="bg-white p-4 rounded-2xl shadow-sm mb-4 flex flex-wrap items-center gap-3">
+                <div class="search-wrap flex-1 min-w-[220px]">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchAsset" oninput="renderAssets()" placeholder="Search assets..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <button onclick="openModal('assetModal')" class="btn-gold px-4 py-2 rounded-lg text-sm"><i class="fas fa-plus mr-1"></i>Add Asset</button>
             </div>
             <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
-                        <tr>
-                            <th class="p-3">Name</th>
-                            <th class="p-3">Category</th>
-                            <th class="p-3">Purchase Date</th>
-                            <th class="p-3">Cost</th>
-                            <th class="p-3">Condition</th>
-                            <th class="p-3">Actions</th>
-                        </tr>
+                        <tr><th class="p-3">Name</th><th class="p-3">Category</th><th class="p-3">Purchase Date</th><th class="p-3">Cost</th><th class="p-3">Condition</th><th class="p-3">Actions</th></tr>
                     </thead>
                     <tbody id="assetsTableBody"></tbody>
                 </table>
@@ -881,66 +634,46 @@
         <!-- ========== REPORTS ========== -->
         <section id="reports" class="content-section hidden">
             <div class="bg-white p-5 rounded-2xl shadow-sm mb-6">
-                <h3 class="font-semibold text-gray-700 mb-3">Generate Reports & Vouchers</h3>
+                <h3 class="font-semibold text-gray-700 mb-3">Generate Reports &amp; Vouchers</h3>
                 <div class="flex flex-wrap gap-3 mb-3">
                     <select id="reportType" class="border p-2 rounded-lg text-sm flex-1 min-w-[200px]">
-                        <option value="student_report">Student Report</option>
+                        <option value="student_report">Student Report (with Fee Structure)</option>
                         <option value="fee_collection_report">Fee Collection Report</option>
+                        <option value="monthly_ledger_report">Monthly Ledger Report</option>
+                        <option value="outstanding_report">Outstanding Students Report</option>
                         <option value="financial_summary">Financial Summary</option>
                         <option value="voucher">Fee Receipt / Voucher (latest)</option>
                     </select>
                     <button onclick="generateReport()" class="btn-gold px-5 py-2 rounded-lg text-sm">Generate</button>
                 </div>
                 <div id="reportActions" class="hidden flex gap-2 flex-wrap">
-                    <button onclick="exportReport('png')"
-                        class="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-blue-700"><i
-                            class="fas fa-image mr-1"></i>PNG</button>
-                    <button onclick="exportReport('pdf')"
-                        class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-red-700"><i
-                            class="fas fa-file-pdf mr-1"></i>PDF</button>
-                    <button onclick="window.print()"
-                        class="bg-gray-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-gray-700"><i
-                            class="fas fa-print mr-1"></i>Print</button>
+                    <button onclick="exportReport('png')" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-blue-700"><i class="fas fa-image mr-1"></i>PNG</button>
+                    <button onclick="exportReport('pdf')" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-red-700"><i class="fas fa-file-pdf mr-1"></i>PDF</button>
+                    <button onclick="window.print()" class="bg-gray-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-gray-700"><i class="fas fa-print mr-1"></i>Print</button>
                 </div>
             </div>
 
             <div id="reportOutput" class="bg-white p-5 rounded-2xl shadow-sm hidden">
                 <div id="voucherPreview" class="hidden">
                     <div class="text-center mb-4">
-                        <img src="drq.png" alt="DRQ" class="h-16 mx-auto mb-2 object-contain"
-                            onerror="this.style.display='none'">
+                        <img src="drq.png" alt="DRQ" class="h-16 mx-auto mb-2 object-contain" onerror="this.style.display='none'">
                         <h2 class="text-2xl font-bold text-gray-800">Dar-E-Arqam School</h2>
                         <h3 class="text-lg text-goldDark font-semibold">Official Fee Receipt</h3>
-                        <p class="text-xs text-gray-500">Branch: <span class="branchName">Tamboli Campus</span> | Date:
-                            <span class="voucherDate"></span> | Receipt: <span class="voucherNo"></span>
-                        </p>
+                        <p class="text-xs text-gray-500">Branch: <span class="branchName">Tamboli Campus</span> | Date: <span class="voucherDate"></span> | Receipt: <span class="voucherNo"></span></p>
                     </div>
                     <div class="grid grid-cols-2 gap-2 mb-3 text-sm">
                         <div><strong>Student:</strong> <span class="vStudent"></span></div>
                         <div><strong>Class:</strong> <span class="vClass"></span></div>
                     </div>
                     <table class="w-full border-collapse border border-gray-300 text-sm mb-3">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="border p-1">Description</th>
-                                <th class="border p-1">Month/Year</th>
-                                <th class="border p-1 text-right">Amount</th>
-                            </tr>
-                        </thead>
+                        <thead class="bg-gray-100"><tr><th class="border p-1">Description</th><th class="border p-1">Month/Year</th><th class="border p-1 text-right">Amount</th></tr></thead>
                         <tbody id="voucherItems"></tbody>
-                        <tfoot>
-                            <tr class="font-bold bg-gold/30">
-                                <td colspan="2" class="border p-1 text-right">Total:</td>
-                                <td class="border p-1 text-right">Rs. <span class="vTotal"></span></td>
-                            </tr>
-                        </tfoot>
+                        <tfoot><tr class="font-bold bg-gold/30"><td colspan="2" class="border p-1 text-right">Total:</td><td class="border p-1 text-right">Rs. <span class="vTotal"></span></td></tr></tfoot>
                     </table>
                     <div class="text-xs text-gray-600 mb-4"><strong>Method:</strong> <span class="vMethod"></span></div>
                     <div class="flex justify-between items-center border-t pt-3 text-xs text-gray-500">
                         <span>Computer generated receipt.</span>
-                        <button onclick="sendWhatsAppVoucher()"
-                            class="bg-green-600 text-white px-3 py-1 rounded-full text-xs hover:bg-green-700 transition"><i
-                                class="fab fa-whatsapp mr-1"></i>Send to WhatsApp</button>
+                        <button onclick="sendWhatsAppVoucher()" class="bg-green-600 text-white px-3 py-1 rounded-full text-xs hover:bg-green-700 transition"><i class="fab fa-whatsapp mr-1"></i>Send to WhatsApp</button>
                     </div>
                 </div>
                 <div id="standardReportOutput" class="hidden"></div>
@@ -953,87 +686,216 @@
                 <h3 class="font-semibold text-gray-700 mb-3">System Settings</h3>
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-1">Branch / Campus Name</label>
-                    <input type="text" id="branchInput" class="w-full border p-2 rounded-lg text-sm"
-                        placeholder="Tamboli Campus">
+                    <input type="text" id="branchInput" class="w-full border p-2 rounded-lg text-sm" placeholder="Tamboli Campus">
                 </div>
 
-                <div class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-100 text-xs text-blue-900">
+                <div class="mb-4 p-4 bg-yellow-50 rounded-lg border border-yellow-100 text-xs text-yellow-900">
                     <div class="font-semibold mb-1"><i class="fas fa-server mr-1"></i> Backend Connection</div>
                     <div class="font-mono text-[11px] break-all mb-2" id="backendInfoBox">
                         Server: Friday Software Technology Park<br>
                         Developer: MUHAMMAD SULEMAN ZAFAR
                     </div>
-                    <div id="backendStatusBox" class="p-2 rounded bg-white text-[11px] border border-blue-200">
+                    <div id="backendStatusBox" class="p-2 rounded bg-white text-[11px] border border-yellow-200">
                         Press "Test Connection" to verify.
                     </div>
-                    
-                    <button onclick="testBackend()" class="mt-3 btn-gold px-3 py-1.5 rounded text-xs"><i
-                            class="fas fa-plug mr-1"></i>Test Connection</button>
+                    <button onclick="testBackend()" class="mt-3 btn-gold px-3 py-1.5 rounded text-xs"><i class="fas fa-plug mr-1"></i>Test Connection</button>
                 </div>
 
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="updateBranch()" class="btn-gold px-4 py-2 rounded-lg text-sm">Update
-                        Branch</button>
-                    <button onclick="downloadBackup()"
-                        class="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700">Backup
-                        JSON</button>
-                    <label
-                        class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 cursor-pointer">Restore<input
-                            type="file" id="restoreFile" class="hidden" accept=".json"
-                            onchange="restoreBackup(this)"></label>
+                    <button onclick="updateBranch()" class="btn-gold px-4 py-2 rounded-lg text-sm">Update Branch</button>
+                    <button onclick="downloadBackup()" class="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700">Backup JSON</button>
+                    <label class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 cursor-pointer">Restore<input type="file" id="restoreFile" class="hidden" accept=".json" onchange="restoreBackup(this)"></label>
                 </div>
-                <a href="#" style="margin-bottom: 10px; margin-top: 50px;"
-            onclick="event.preventDefault(); window.location.href='https://fridaysoftwaretechnology.github.io/admin/';"
-            class="nav-item flex items-center px-5 py-3 text-sm text-green-300 bg-gradient-to-r from-black/40 via-green-900/40 to-black/40 bg-[length:200%_100%] hover:text-green-400 hover:from-black/50 hover:via-green-700/50 hover:to-black/50 hover:border-l-green-500 transition-all duration-300"><i
-                class="fas fa-code w-6"></i> Visit Developer Portal</a>
+                <a href="#" style="margin-top: 40px;"
+                    onclick="event.preventDefault(); window.location.href='https://fridaysoftwaretechnology.github.io/admin/';"
+                    class="nav-item flex items-center px-5 py-3 text-sm text-green-300 bg-gradient-to-r from-black/40 via-green-900/40 to-black/40 bg-[length:200%_100%] hover:text-green-400 hover:from-black/50 hover:via-green-700/50 hover:to-black/50 hover:border-l-green-500 transition-all duration-300 rounded-lg"><i class="fas fa-code w-6"></i> Visit Developer Portal</a>
             </div>
         </section>
     </main>
 
     <!-- ========== MODALS ========== -->
     <div id="studentModal" class="modal fixed inset-0 hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 animate-pop-in">
-            <h3 class="text-xl font-bold mb-4">Add Student</h3>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 animate-pop-in">
+            <h3 class="text-xl font-bold mb-1">Add Student</h3>
+            <p class="text-xs text-gray-500 mb-4">Fill in the profile and the complete fee structure.</p>
             <form id="studentForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <input type="text" name="name" placeholder="Full Name *" required class="border p-2 rounded-lg">
                 <input type="text" name="fatherName" placeholder="Father Name *" required class="border p-2 rounded-lg">
                 <select name="class" required class="border p-2 rounded-lg">
                     <option value="">Select Class *</option>
-                    <option>Play</option>
-                    <option>Nursery</option>
-                    <option>KG</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
+                    <option>Play</option><option>Nursery</option><option>KG</option>
+                    <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                    <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
                 </select>
                 <input type="text" name="section" placeholder="Section" class="border p-2 rounded-lg">
                 <input type="text" name="phone" placeholder="WhatsApp Number" class="border p-2 rounded-lg">
-                <select name="status" class="border p-2 rounded-lg">
-                    <option>Active</option>
-                    <option>Suspended</option>
-                    <option>Deleted</option>
-                </select>
-                <input type="text" name="address" placeholder="Address"
-                    class="border p-2 rounded-lg col-span-1 md:col-span-2">
-                <input type="number" name="fee" placeholder="Monthly Fee" class="border p-2 rounded-lg">
-                <input type="number" name="stationary" placeholder="Stationary" class="border p-2 rounded-lg">
-                <input type="number" name="otherCharges" placeholder="Other Charges" class="border p-2 rounded-lg">
-                <input type="number" name="examFee" placeholder="Exam Fee" class="border p-2 rounded-lg">
-                <input type="number" name="annualFee" placeholder="Annual Fee" class="border p-2 rounded-lg">
-                <input type="number" name="books" placeholder="Books Fee" class="border p-2 rounded-lg">
+                <select name="status" class="border p-2 rounded-lg"><option>Active</option><option>Suspended</option><option>Deleted</option></select>
+                <input type="text" name="address" placeholder="Address" class="border p-2 rounded-lg">
+                <input type="date" name="admissionDate" class="border p-2 rounded-lg" title="Admission Date (optional)">
+
+                <div class="md:col-span-2 mt-1 mb-1">
+                    <div class="flex items-center gap-2 text-xs font-bold text-yellow-900 bg-yellow-50 border border-yellow-100 rounded-lg px-3 py-2">
+                        <i class="fas fa-coins"></i> FEE STRUCTURE — monthly items are billed every month
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Monthly Tuition Fee</label>
+                    <input type="number" name="fee" placeholder="0" class="border p-2 rounded-lg w-full">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Stationary (monthly)</label>
+                    <input type="number" name="stationary" placeholder="0" class="border p-2 rounded-lg w-full">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Other Charges (monthly)</label>
+                    <input type="number" name="otherCharges" placeholder="0" class="border p-2 rounded-lg w-full">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Discount (monthly)</label>
+                    <input type="number" name="discount" placeholder="0" class="border p-2 rounded-lg w-full">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Exam Fee (one-time)</label>
+                    <input type="number" name="examFee" placeholder="0" class="border p-2 rounded-lg w-full">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Annual Fee (one-time)</label>
+                    <input type="number" name="annualFee" placeholder="0" class="border p-2 rounded-lg w-full">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Books Fee (one-time)</label>
+                    <input type="number" name="books" placeholder="0" class="border p-2 rounded-lg w-full">
+                </div>
+                <div class="flex items-end">
+                    <div class="w-full bg-yellow-50 border border-yellow-100 rounded-lg p-2 text-xs">
+                        <div class="flex justify-between"><span class="text-gray-500">Monthly payable:</span><strong class="text-yellow-800" id="previewMonthly">Rs. 0</strong></div>
+                        <div class="flex justify-between"><span class="text-gray-500">One-time total:</span><strong class="text-gray-700" id="previewOneTime">Rs. 0</strong></div>
+                    </div>
+                </div>
+
                 <div class="col-span-1 md:col-span-2 flex justify-end gap-2 mt-2">
-                    <button type="button" onclick="closeModal('studentModal')"
-                        class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
-                    <button type="submit" class="btn-gold px-4 py-2 rounded-lg">Save</button>
+                    <button type="button" onclick="closeModal('studentModal')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
+                    <button type="submit" class="btn-gold px-4 py-2 rounded-lg">Save Student</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ========== STUDENT DETAIL MODAL ========== -->
+    <div id="studentDetailModal" class="modal fixed inset-0 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[93vh] overflow-hidden flex flex-col animate-pop-in">
+            <div class="p-5 border-b bg-gradient-to-r from-yellow-50 via-white to-white flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-yellow-100 border border-yellow-200 flex items-center justify-center text-2xl font-bold text-yellow-800" id="sdAvatar">S</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800" id="sdName">Student</h3>
+                        <p class="text-sm text-gray-500" id="sdSub">—</p>
+                        <div class="flex flex-wrap gap-2 mt-1.5" id="sdBadges"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="collectForCurrentStudent()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-semibold"><i class="fas fa-hand-holding-usd mr-1"></i>Collect Fee</button>
+                    <button onclick="closeModal('studentDetailModal')" class="text-gray-400 hover:text-gray-700 text-xl px-2"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="flex gap-1 px-4 pt-2 border-b bg-gray-50 overflow-x-auto">
+                <button class="tab-btn active" data-tab="sdProfile" onclick="switchStudentTab('sdProfile')"><i class="fas fa-sliders mr-1"></i>Fee Structure</button>
+                <button class="tab-btn" data-tab="sdHistory" onclick="switchStudentTab('sdHistory')"><i class="fas fa-receipt mr-1"></i>Payment History</button>
+                <button class="tab-btn" data-tab="sdLedger" onclick="switchStudentTab('sdLedger')"><i class="fas fa-table-list mr-1"></i>Monthly Ledger</button>
+            </div>
+
+            <div class="overflow-y-auto flex-1 p-5 bg-gray-50">
+                <div id="sdProfile" class="sd-tab-pane">
+                    <form id="feeStructureForm" class="bg-white rounded-2xl border border-gray-100 p-5 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="md:col-span-3 flex items-center gap-2 text-xs font-bold text-yellow-900">
+                            <i class="fas fa-id-card"></i> STUDENT PROFILE
+                        </div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Full Name</label><input type="text" name="name" required class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Father Name</label><input type="text" name="fatherName" required class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Class</label>
+                            <select name="class" class="fee-input">
+                                <option>Play</option><option>Nursery</option><option>KG</option>
+                                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                                <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+                            </select>
+                        </div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Section</label><input type="text" name="section" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">WhatsApp</label><input type="text" name="phone" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Status</label>
+                            <select name="status" class="fee-input"><option>Active</option><option>Suspended</option><option>Deleted</option></select>
+                        </div>
+                        <div class="md:col-span-2"><label class="block text-[11px] font-semibold text-gray-500 mb-1">Address</label><input type="text" name="address" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Admission Date</label><input type="date" name="admissionDate" class="fee-input"></div>
+
+                        <div class="md:col-span-3 mt-2 flex items-center gap-2 text-xs font-bold text-yellow-900">
+                            <i class="fas fa-coins"></i> FEE STRUCTURE
+                        </div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Monthly Tuition Fee</label><input type="number" name="fee" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Stationary (monthly)</label><input type="number" name="stationary" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Other Charges (monthly)</label><input type="number" name="otherCharges" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Discount (monthly)</label><input type="number" name="discount" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Exam Fee (one-time)</label><input type="number" name="examFee" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Annual Fee (one-time)</label><input type="number" name="annualFee" class="fee-input"></div>
+                        <div><label class="block text-[11px] font-semibold text-gray-500 mb-1">Books Fee (one-time)</label><input type="number" name="books" class="fee-input"></div>
+
+                        <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-3">
+                                <p class="text-[10px] uppercase text-yellow-800 font-bold tracking-wider">Monthly Payable</p>
+                                <p class="text-lg font-bold text-yellow-900" id="sdMonthlyPayable">Rs. 0</p>
+                            </div>
+                            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
+                                <p class="text-[10px] uppercase text-indigo-700 font-bold tracking-wider">One-Time Dues</p>
+                                <p class="text-lg font-bold text-indigo-800" id="sdOneTime">Rs. 0</p>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-3">
+                                <p class="text-[10px] uppercase text-emerald-700 font-bold tracking-wider">Lifetime Paid</p>
+                                <p class="text-lg font-bold text-emerald-800" id="sdTotalPaid">Rs. 0</p>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-3 flex justify-end gap-2">
+                            <button type="button" onclick="closeModal('studentDetailModal')" class="bg-gray-200 px-4 py-2 rounded-lg">Close</button>
+                            <button type="submit" class="btn-gold px-5 py-2 rounded-lg"><i class="fas fa-floppy-disk mr-1"></i>Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="sdHistory" class="sd-tab-pane hidden">
+                    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                        <div class="p-4 border-b flex flex-wrap justify-between items-center gap-3">
+                            <h4 class="font-semibold text-gray-700 text-sm"><i class="fas fa-clock-rotate-left text-gold mr-1"></i> Payment History</h4>
+                            <span class="text-xs text-gray-500" id="sdHistorySummary"></span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm mini-table">
+                                <thead class="bg-gray-50 text-gray-500">
+                                    <tr><th>Date</th><th>Period</th><th>Description</th><th>Method</th><th class="text-right">Amount</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="sdHistoryBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sdLedger" class="sd-tab-pane hidden">
+                    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                        <div class="p-4 border-b flex flex-wrap justify-between items-center gap-3">
+                            <h4 class="font-semibold text-gray-700 text-sm"><i class="fas fa-table-list text-gold mr-1"></i> Month-by-Month Ledger</h4>
+                            <span class="text-xs text-gray-500" id="sdLedgerSummary"></span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm mini-table">
+                                <thead class="bg-gray-50 text-gray-500">
+                                    <tr><th>Month</th><th>Year</th><th class="text-right">Payable</th><th class="text-right">Paid</th><th class="text-right">Balance</th><th>Status</th><th>Action</th></tr>
+                                </thead>
+                                <tbody id="sdLedgerBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1042,18 +904,15 @@
             <h3 class="text-xl font-bold mb-4">Add Staff</h3>
             <form id="staffForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <input type="text" name="name" placeholder="Full Name *" required class="border p-2 rounded-lg">
-                <input type="text" name="designation" placeholder="Designation *" required
-                    class="border p-2 rounded-lg">
+                <input type="text" name="designation" placeholder="Designation *" required class="border p-2 rounded-lg">
                 <input type="number" name="salary" placeholder="Salary *" required class="border p-2 rounded-lg">
                 <input type="text" name="phone" placeholder="Phone" class="border p-2 rounded-lg">
                 <input type="text" name="subject" placeholder="Subject" class="border p-2 rounded-lg">
                 <input type="text" name="qualification" placeholder="Qualification" class="border p-2 rounded-lg">
                 <input type="text" name="reference" placeholder="Reference" class="border p-2 rounded-lg">
-                <input type="text" name="address" placeholder="Address"
-                    class="border p-2 rounded-lg col-span-1 md:col-span-2">
+                <input type="text" name="address" placeholder="Address" class="border p-2 rounded-lg col-span-1 md:col-span-2">
                 <div class="col-span-1 md:col-span-2 flex justify-end gap-2 mt-2">
-                    <button type="button" onclick="closeModal('staffModal')"
-                        class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
+                    <button type="button" onclick="closeModal('staffModal')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
                     <button type="submit" class="btn-gold px-4 py-2 rounded-lg">Save</button>
                 </div>
             </form>
@@ -1065,40 +924,25 @@
             <h3 class="text-xl font-bold mb-4" id="feeModalTitle">Collect Fee</h3>
             <form id="feeForm" class="grid gap-3 text-sm">
                 <input type="hidden" name="editIndex" id="feeEditIndex" value="">
-                <select name="studentId" required class="border p-2 rounded-lg">
-                    <option value="">Select Student *</option>
-                </select>
-                <select name="month" required class="border p-2 rounded-lg">
-                    <option value="">Month *</option>
-                    <option>January</option>
-                    <option>February</option>
-                    <option>March</option>
-                    <option>April</option>
-                    <option>May</option>
-                    <option>June</option>
-                    <option>July</option>
-                    <option>August</option>
-                    <option>September</option>
-                    <option>October</option>
-                    <option>November</option>
-                    <option>December</option>
-                </select>
-                <input type="text" name="year" placeholder="Year (e.g., 2026)" required class="border p-2 rounded-lg">
-                <input type="text" name="description" placeholder="Description (e.g., Monthly Fee)" required
-                    class="border p-2 rounded-lg">
+                <select name="studentId" required class="border p-2 rounded-lg"><option value="">Select Student *</option></select>
+                <div class="grid grid-cols-2 gap-3">
+                    <select name="month" required class="border p-2 rounded-lg">
+                        <option value="">Month *</option>
+                        <option>January</option><option>February</option><option>March</option><option>April</option>
+                        <option>May</option><option>June</option><option>July</option><option>August</option>
+                        <option>September</option><option>October</option><option>November</option><option>December</option>
+                    </select>
+                    <input type="text" name="year" placeholder="Year (e.g., 2026)" required class="border p-2 rounded-lg">
+                </div>
+                <div id="feeBalanceHint" class="hidden text-xs bg-yellow-50 border border-yellow-100 text-yellow-900 rounded-lg p-2.5"></div>
+                <input type="text" name="description" placeholder="Description (e.g., Monthly Fee)" required class="border p-2 rounded-lg">
                 <input type="number" name="amount" placeholder="Amount *" required class="border p-2 rounded-lg">
                 <select name="method" required class="border p-2 rounded-lg">
-                    <option>Cash</option>
-                    <option>Bank Transfer</option>
-                    <option>JazzCash</option>
-                    <option>EasyPaisa</option>
-                    <option>Other</option>
+                    <option>Cash</option><option>Bank Transfer</option><option>JazzCash</option><option>EasyPaisa</option><option>Other</option>
                 </select>
                 <div class="flex justify-end gap-2 mt-2">
-                    <button type="button" onclick="closeModal('feeModal')"
-                        class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
-                    <button type="submit" class="btn-gold px-4 py-2 rounded-lg" id="feeSubmitBtn">Save & Generate
-                        Voucher</button>
+                    <button type="button" onclick="closeModal('feeModal')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
+                    <button type="submit" class="btn-gold px-4 py-2 rounded-lg" id="feeSubmitBtn">Save &amp; Generate Voucher</button>
                 </div>
             </form>
         </div>
@@ -1111,26 +955,16 @@
                 <input type="date" name="date" required class="border p-2 rounded-lg">
                 <select name="category" required class="border p-2 rounded-lg">
                     <option value="">Category *</option>
-                    <option>Salary</option>
-                    <option>Utilities</option>
-                    <option>Rent</option>
-                    <option>Maintenance</option>
-                    <option>Supplies</option>
-                    <option>Other</option>
+                    <option>Salary</option><option>Utilities</option><option>Rent</option>
+                    <option>Maintenance</option><option>Supplies</option><option>Other</option>
                 </select>
-                <input type="text" name="description" placeholder="Description *" required
-                    class="border p-2 rounded-lg">
+                <input type="text" name="description" placeholder="Description *" required class="border p-2 rounded-lg">
                 <input type="number" name="amount" placeholder="Amount *" required class="border p-2 rounded-lg">
                 <select name="method" required class="border p-2 rounded-lg">
-                    <option>Cash</option>
-                    <option>Bank</option>
-                    <option>JazzCash</option>
-                    <option>EasyPaisa</option>
-                    <option>Other</option>
+                    <option>Cash</option><option>Bank</option><option>JazzCash</option><option>EasyPaisa</option><option>Other</option>
                 </select>
                 <div class="flex justify-end gap-2 mt-2">
-                    <button type="button" onclick="closeModal('expenseModal')"
-                        class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
+                    <button type="button" onclick="closeModal('expenseModal')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
                     <button type="submit" class="btn-gold px-4 py-2 rounded-lg">Save</button>
                 </div>
             </form>
@@ -1146,14 +980,10 @@
                 <input type="date" name="purchaseDate" required class="border p-2 rounded-lg">
                 <input type="number" name="cost" placeholder="Cost *" required class="border p-2 rounded-lg">
                 <select name="condition" required class="border p-2 rounded-lg">
-                    <option>New</option>
-                    <option>Good</option>
-                    <option>Fair</option>
-                    <option>Poor</option>
+                    <option>New</option><option>Good</option><option>Fair</option><option>Poor</option>
                 </select>
                 <div class="flex justify-end gap-2 mt-2">
-                    <button type="button" onclick="closeModal('assetModal')"
-                        class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
+                    <button type="button" onclick="closeModal('assetModal')" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
                     <button type="submit" class="btn-gold px-4 py-2 rounded-lg">Save</button>
                 </div>
             </form>
@@ -1166,28 +996,45 @@
             <h2 class="confirm-title" id="confirmTitle">Are you sure?</h2>
             <p class="confirm-message" id="confirmMessage">This action cannot be undone.</p>
             <div class="confirm-actions">
-                <button class="confirm-btn confirm-btn-cancel" id="confirmCancelBtn"><i class="fas fa-times"></i>
-                    Cancel</button>
-                <button class="confirm-btn confirm-btn-confirm" id="confirmOkBtn"><i class="fas fa-check"></i>
-                    Confirm</button>
+                <button class="confirm-btn confirm-btn-cancel" id="confirmCancelBtn"><i class="fas fa-times"></i> Cancel</button>
+                <button class="confirm-btn confirm-btn-confirm" id="confirmOkBtn"><i class="fas fa-check"></i> Confirm</button>
             </div>
         </div>
     </div>
 
     <script>
         /* =========================================================
-           CONFIG — BACKEND ROUTES (DO NOT CHANGE)
+           CONFIG — BACKEND ROUTES (DRQ)  [UNCHANGED]
            ========================================================= */
         const API_BASE = 'https://fridaysoftwaretechnology.pythonanywhere.com';
+        const API_PREFIX = 'drq';
         const FILES = {
-            students: 'students.json',
-            staff: 'staff.json',
-            fees: 'fees.json',
-            expenses: 'expenses.json',
-            assets: 'assets.json',
+            students:       'students.json',
+            staff:          'staff.json',
+            fees:           'fees.json',
+            expenses:       'expenses.json',
+            assets:         'assets.json',
             salaryPayments: 'salary_payments.json',
-            meta: 'meta.json'
+            meta:           'meta.json'
         };
+        const DEFAULT_BRANCH = 'Tamboli Campus';
+        const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const MONTH_INDEX = { January:0,February:1,March:2,April:3,May:4,June:5,July:6,August:7,September:8,October:9,November:10,December:11 };
+
+        /* =========================================================
+           SMALL HELPERS
+           ========================================================= */
+        function num(v) { const n = parseFloat(v); return isNaN(n) ? 0 : n; }
+        function uid(prefix) { return (prefix || 'ID') + '-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase(); }
+        function escapeHtml(str) {
+            return String(str === undefined || str === null ? '' : str)
+                .replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+        function money(v) { return Math.round(num(v)).toLocaleString(); }
+        function todayISO() { return new Date().toISOString().split('T')[0]; }
+        function currentMonthName() { return MONTHS[new Date().getMonth()]; }
+        function currentYearStr() { return String(new Date().getFullYear()); }
 
         /* =========================================================
            OPERATION OVERLAY
@@ -1210,10 +1057,10 @@
         }
 
         /* =========================================================
-           LOW-LEVEL FETCH WITH FULL ERROR REPORTING
+           LOW-LEVEL FETCH  [UNCHANGED BEHAVIOUR]
            ========================================================= */
         async function apiRequest(endpoint, payload) {
-            const url = `${API_BASE}/drq/${endpoint}`;
+            const url = `${API_BASE}/${API_PREFIX}/${endpoint}`;
             console.log(`[API ${endpoint}] →`, url, payload);
 
             let res;
@@ -1247,9 +1094,6 @@
             return { ok: true, data: json };
         }
 
-        /* =========================================================
-           READ / SAVE (per file)
-           ========================================================= */
         async function apiRead(file) {
             const r = await apiRequest('read', { file });
             if (!r.ok) return null;
@@ -1270,10 +1114,10 @@
             const el = document.getElementById('connBadge');
             if (!el) return;
             el.className = 'hidden md:inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full';
-            if (status === 'ok') el.classList.add('bg-green-100', 'text-green-700');
+            if (status === 'ok')    el.classList.add('bg-green-100', 'text-green-700');
             else if (status === 'bad') el.classList.add('bg-red-100', 'text-red-700');
             else el.classList.add('bg-gray-100', 'text-gray-500');
-            el.innerHTML = `<i class="fas fa-circle text-[6px]"></i> ${text}`;
+            el.innerHTML = `<i class="fas fa-circle text-[6px]"></i> ${escapeHtml(text)}`;
         }
 
         async function checkConnection() {
@@ -1287,17 +1131,17 @@
         async function testBackend() {
             const box = document.getElementById('backendStatusBox');
             box.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Testing...';
-            opStart('Testing backend...', 'POST /drq/read');
+            opStart('Testing backend...', `POST /${API_PREFIX}/read`);
             const r = await apiRequest('read', { file: FILES.meta });
             opStop();
             if (r.ok) {
-                box.innerHTML = `<span class="text-green-700 font-semibold"><i class="fas fa-check-circle"></i> Success</span><br>Response: <code>${JSON.stringify(r.data)}</code>`;
+                box.innerHTML = `<span class="text-green-700 font-semibold"><i class="fas fa-check-circle"></i> Success</span><br>Response: <code>${escapeHtml(JSON.stringify(r.data))}</code>`;
                 showToast('Backend reachable!', 'success');
                 setConnBadge('ok', 'backend online');
             } else {
                 box.innerHTML = `<span class="text-red-700 font-semibold"><i class="fas fa-times-circle"></i> Failed</span><br>
-                    <b>Type:</b> ${r.error}<br>
-                    <b>Message:</b> ${r.message}`;
+                    <b>Type:</b> ${escapeHtml(r.error)}<br>
+                    <b>Message:</b> ${escapeHtml(r.message)}`;
                 showToast(`Backend ${r.error}: ${r.message}`, 'error');
                 setConnBadge('bad', `backend: ${r.message}`);
             }
@@ -1309,17 +1153,17 @@
         function customConfirm(title, message, options = {}) {
             return new Promise((resolve) => {
                 const { okText = 'Confirm', cancelText = 'Cancel', variant = 'default', icon = 'fa-question' } = options;
-                const overlay = document.getElementById('customConfirmOverlay');
-                const titleEl = document.getElementById('confirmTitle');
+                const overlay   = document.getElementById('customConfirmOverlay');
+                const titleEl   = document.getElementById('confirmTitle');
                 const messageEl = document.getElementById('confirmMessage');
-                const okBtn = document.getElementById('confirmOkBtn');
+                const okBtn     = document.getElementById('confirmOkBtn');
                 const cancelBtn = document.getElementById('confirmCancelBtn');
-                const iconEl = document.getElementById('confirmIconClass');
+                const iconEl    = document.getElementById('confirmIconClass');
 
                 titleEl.textContent = title;
                 messageEl.textContent = message;
-                okBtn.innerHTML = `<i class="fas fa-check"></i> ${okText}`;
-                cancelBtn.innerHTML = `<i class="fas fa-times"></i> ${cancelText}`;
+                okBtn.innerHTML = `<i class="fas fa-check"></i> ${escapeHtml(okText)}`;
+                cancelBtn.innerHTML = `<i class="fas fa-times"></i> ${escapeHtml(cancelText)}`;
                 iconEl.className = `fas ${icon}`;
 
                 okBtn.classList.remove('danger', 'success', 'gold');
@@ -1376,13 +1220,117 @@
             students: [], staff: [], fees: [],
             expenses: [], assets: [], salaryPayments: []
         };
-        let appMeta = { branch: 'Tamboli Campus' };
+        let appMeta = { branch: DEFAULT_BRANCH };
         let feeChartInstance = null;
         let classChartInstance = null;
         let currentVoucherFee = null;
+        let currentStudentId = null;
+        let ledgerFilter = 'All';
 
         /* =========================================================
-           LOAD ALL DATA — with operation overlay
+           NORMALISATION  (stable IDs + legacy migration)
+           ========================================================= */
+        function normalizeStudents(list) {
+            return list.map(s => {
+                const o = Object.assign({}, s);
+                if (!o.id) o.id = uid('STU');
+                o.fee          = num(o.fee);
+                o.stationary   = num(o.stationary);
+                o.otherCharges = num(o.otherCharges);
+                o.examFee      = num(o.examFee);
+                o.annualFee    = num(o.annualFee);
+                o.books        = num(o.books);
+                o.discount     = num(o.discount);
+                o.status       = o.status || 'Active';
+                return o;
+            });
+        }
+
+        function normalizeFees(list, students) {
+            return list.map(f => {
+                const o = Object.assign({}, f);
+                if (!o.id) o.id = uid('FEE');
+                o.amount = num(o.amount);
+                o.year = String(o.year || '');
+                if (!o.studentId) {
+                    const match = students.find(s => s.name === o.studentName);
+                    if (match) o.studentId = match.id;
+                }
+                return o;
+            });
+        }
+
+        /* =========================================================
+           FEE STRUCTURE CALCULATIONS
+           ========================================================= */
+        function monthlyPayable(s) {
+            if (!s) return 0;
+            return num(s.fee) + num(s.stationary) + num(s.otherCharges) - num(s.discount);
+        }
+        function oneTimeDues(s) {
+            if (!s) return 0;
+            return num(s.examFee) + num(s.annualFee) + num(s.books);
+        }
+        function fullStructureTotal(s) {
+            if (!s) return 0;
+            return num(s.fee) + num(s.stationary) + num(s.otherCharges) + num(s.examFee) + num(s.annualFee) + num(s.books) - num(s.discount);
+        }
+        function findStudent(idOrName) {
+            if (!idOrName) return null;
+            return appData.students.find(s => s.id === idOrName)
+                || appData.students.find(s => s.name === idOrName)
+                || null;
+        }
+        function feesForStudent(studentId, studentName) {
+            return appData.fees.filter(f =>
+                (studentId && f.studentId === studentId) ||
+                (!f.studentId && studentName && f.studentName === studentName)
+            );
+        }
+        function paidInMonth(studentId, studentName, month, year) {
+            return feesForStudent(studentId, studentName)
+                .filter(f => f.month === month && String(f.year) === String(year))
+                .reduce((sum, f) => sum + num(f.amount), 0);
+        }
+        function totalPaidLifetime(studentId, studentName) {
+            return feesForStudent(studentId, studentName).reduce((sum, f) => sum + num(f.amount), 0);
+        }
+        function isBeforeAdmission(s, month, year) {
+            if (!s || !s.admissionDate) return false;
+            const mi = MONTH_INDEX[month];
+            if (mi === undefined) return false;
+            const target = new Date(parseInt(year, 10), mi, 1);
+            const adm = new Date(s.admissionDate);
+            if (isNaN(adm.getTime())) return false;
+            return target < new Date(adm.getFullYear(), adm.getMonth(), 1);
+        }
+        function monthStatus(payable, paid, notApplicable) {
+            if (notApplicable) return 'NA';
+            if (paid <= 0 && payable <= 0) return 'Paid';
+            if (paid >= payable && payable > 0) return 'Paid';
+            if (paid > 0) return 'Partial';
+            if (payable <= 0) return 'Paid';
+            return 'Due';
+        }
+        function statusBadge(st) {
+            if (st === 'Paid') return '<span class="paid-badge">Paid</span>';
+            if (st === 'Partial') return '<span class="partial-badge">Partial</span>';
+            if (st === 'NA') return '<span class="na-badge">N/A</span>';
+            return '<span class="due-badge">Due</span>';
+        }
+        function monthsBackList(count) {
+            const arr = [];
+            const d = new Date();
+            d.setDate(1);
+            for (let i = 0; i < count; i++) {
+                arr.push({ month: MONTHS[d.getMonth()], year: String(d.getFullYear()) });
+                d.setMonth(d.getMonth() - 1);
+            }
+            return arr;
+        }
+
+        /* =========================================================
+           LOAD ALL DATA
            ========================================================= */
         async function loadAllData() {
             const [students, staff, fees, expenses, assets, salaryPayments, meta] = await Promise.all([
@@ -1395,20 +1343,25 @@
                 apiRead(FILES.meta)
             ]);
 
-            appData.students = Array.isArray(students) ? students : [];
-            appData.staff = Array.isArray(staff) ? staff : [];
-            appData.fees = Array.isArray(fees) ? fees : [];
-            appData.expenses = Array.isArray(expenses) ? expenses : [];
-            appData.assets = Array.isArray(assets) ? assets : [];
+            appData.students       = normalizeStudents(Array.isArray(students) ? students : []);
+            appData.staff          = Array.isArray(staff) ? staff : [];
+            appData.fees           = normalizeFees(Array.isArray(fees) ? fees : [], appData.students);
+            appData.expenses       = Array.isArray(expenses) ? expenses : [];
+            appData.assets         = Array.isArray(assets) ? assets : [];
             appData.salaryPayments = Array.isArray(salaryPayments) ? salaryPayments : [];
-            appMeta = (meta && typeof meta === 'object' && !Array.isArray(meta)) ? meta : { branch: 'Tamboli Campus' };
+            appMeta = (meta && typeof meta === 'object' && !Array.isArray(meta)) ? meta : { branch: DEFAULT_BRANCH };
 
-            document.getElementById('branchDisplay').textContent = appMeta.branch || 'Tamboli Campus';
-            document.getElementById('branchInput').value = appMeta.branch || 'Tamboli Campus';
-            document.querySelectorAll('.branchName').forEach(el => el.textContent = appMeta.branch || 'Tamboli Campus');
+            document.getElementById('branchDisplay').textContent = appMeta.branch || DEFAULT_BRANCH;
+            document.getElementById('branchInput').value = appMeta.branch || DEFAULT_BRANCH;
+            document.querySelectorAll('.branchName').forEach(el => el.textContent = appMeta.branch || DEFAULT_BRANCH);
 
+            refreshAll();
+        }
+
+        function refreshAll() {
             updateDashboard();
             renderStudents();
+            renderLedger();
             renderStaff();
             renderFees();
             renderExpenses();
@@ -1416,22 +1369,24 @@
             populateStudentDropdown();
             renderCharts();
             renderRecentStudents();
+            renderDashboardOutstanding();
         }
 
-        /* =========================================================
-           SAVE DATASETS
-           ========================================================= */
         async function saveDataset(key) {
             const file = FILES[key];
             if (!file) return false;
             return await apiSave(file, appData[key]);
         }
 
+        async function saveEverything() {
+            const keys = ['students', 'staff', 'fees', 'expenses', 'assets', 'salaryPayments'];
+            const results = await Promise.all(keys.map(k => saveDataset(k)));
+            const metaOk = await apiSave(FILES.meta, { branch: appMeta.branch || DEFAULT_BRANCH });
+            return results.every(Boolean) && metaOk;
+        }
+
         /* =========================================================
-           SYNC — replaces the old Save button
-           Pulls latest data from server, keeps local-only if user made changes?
-           Actually: we first push current local state, then reload from server
-           to guarantee the UI reflects exactly what's on the server.
+           SYNC
            ========================================================= */
         async function syncAllData() {
             const btn = document.getElementById('syncBtn');
@@ -1439,17 +1394,10 @@
             btn.innerHTML = '<i class="fas fa-rotate fa-spin mr-2"></i>Syncing';
             opStart('Syncing with server...', 'Uploading local changes');
 
-            // 1) Push everything to server
-            const keys = ['students', 'staff', 'fees', 'expenses', 'assets', 'salaryPayments'];
-            const pushResults = await Promise.all(keys.map(k => saveDataset(k)));
-            const metaOk = await apiSave(FILES.meta, { branch: appMeta.branch || 'Tamboli Campus' });
-            const pushOk = pushResults.every(Boolean) && metaOk;
+            const pushOk = await saveEverything();
 
-            // 2) Pull fresh copy from server
             document.getElementById('opSubtext').textContent = 'Fetching latest data';
             await loadAllData();
-
-            // 3) Refresh connection badge
             await checkConnection();
 
             opStop();
@@ -1479,19 +1427,22 @@
            ========================================================= */
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
+            const target = document.getElementById(sectionId);
+            if (target) target.classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => {
-                if (el.getAttribute('onclick') && el.getAttribute('onclick').includes(sectionId)) el.classList.add('active');
+                const oc = el.getAttribute('onclick');
+                if (oc && oc.includes(`'${sectionId}'`)) el.classList.add('active');
             });
             const titles = {
-                dashboard: 'Dashboard', students: 'Student Management', staff: 'Staff & Payroll',
-                fees: 'Fee Collection', expenses: 'Expenses', assets: 'Assets',
-                reports: 'Reports & Vouchers', settings: 'Settings'
+                dashboard: 'Dashboard', students: 'Student Management', ledger: 'Monthly Fee Ledger',
+                staff: 'Staff & Payroll', fees: 'Fee Collection', expenses: 'Expenses',
+                assets: 'Assets', reports: 'Reports & Vouchers', settings: 'Settings'
             };
             document.getElementById('pageTitle').textContent = titles[sectionId] || 'Dashboard';
-            if (sectionId === 'dashboard') { updateDashboard(); renderCharts(); }
+            if (sectionId === 'dashboard') { updateDashboard(); renderCharts(); renderDashboardOutstanding(); renderRecentStudents(); }
             if (sectionId === 'students') renderStudents();
+            if (sectionId === 'ledger') renderLedger();
             if (sectionId === 'staff') renderStaff();
             if (sectionId === 'fees') renderFees();
             if (sectionId === 'expenses') renderExpenses();
@@ -1499,66 +1450,317 @@
         }
 
         /* =========================================================
-           RENDER HELPERS
+           DASHBOARD
            ========================================================= */
         function updateDashboard() {
-            const totalStudents = appData.students.filter(s => s.status !== 'Deleted').length;
-            const activeStudents = appData.students.filter(s => s.status === 'Active').length;
-            document.getElementById('dashTotalStudents').textContent = totalStudents;
-            document.getElementById('dashActiveStudents').textContent = activeStudents;
+            const live = appData.students.filter(s => s.status !== 'Deleted');
+            const active = appData.students.filter(s => s.status === 'Active');
+            document.getElementById('dashTotalStudents').textContent = live.length;
+            document.getElementById('dashActiveStudents').textContent = active.length;
             document.getElementById('dashTotalStaff').textContent = appData.staff.length;
-            const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-            const monthlyFees = appData.fees.filter(f => f.month === currentMonth).reduce((sum, f) => sum + parseFloat(f.amount || 0), 0);
-            const totalExpenses = appData.expenses.reduce((sum, e) => sum + parseFloat(e.amount || 0), 0);
-            document.getElementById('dashFeesCollected').textContent = monthlyFees.toLocaleString();
-            document.getElementById('dashNetPosition').textContent = (monthlyFees - totalExpenses).toLocaleString();
+
+            const cm = currentMonthName();
+            const cy = currentYearStr();
+            const monthlyFees = appData.fees
+                .filter(f => f.month === cm && String(f.year) === cy)
+                .reduce((sum, f) => sum + num(f.amount), 0);
+
+            let outstanding = 0, dueCount = 0;
+            live.forEach(s => {
+                const pay = monthlyPayable(s);
+                const paid = paidInMonth(s.id, s.name, cm, cy);
+                const bal = Math.max(0, pay - paid);
+                if (bal > 0) { outstanding += bal; dueCount++; }
+            });
+
+            const allIncome = appData.fees.reduce((sum, f) => sum + num(f.amount), 0);
+            const allExpense = appData.expenses.reduce((sum, e) => sum + num(e.amount), 0);
+
+            document.getElementById('dashFeesCollected').textContent = money(monthlyFees);
+            document.getElementById('dashOutstanding').textContent = money(outstanding);
+            document.getElementById('dashOutstandingCount').textContent = dueCount;
+            document.getElementById('dashNetPosition').textContent = money(allIncome - allExpense);
+            document.getElementById('dashOutstandingMonth').textContent = `${cm} ${cy}`;
+        }
+
+        function renderDashboardOutstanding() {
+            const tbody = document.getElementById('dashOutstandingBody');
+            if (!tbody) return;
+            const cm = currentMonthName(), cy = currentYearStr();
+            const rows = [];
+            appData.students.filter(s => s.status !== 'Deleted').forEach(s => {
+                const pay = monthlyPayable(s);
+                const paid = paidInMonth(s.id, s.name, cm, cy);
+                const bal = Math.max(0, pay - paid);
+                if (bal > 0) rows.push({ s, pay, paid, bal });
+            });
+            rows.sort((a, b) => b.bal - a.bal);
+            const top = rows.slice(0, 6);
+            tbody.innerHTML = top.map(r => `
+                <tr class="border-b hover:bg-gray-50 cursor-pointer" onclick="openStudentDetail('${r.s.id}')">
+                    <td class="p-3 font-medium text-gray-800">${escapeHtml(r.s.name)}</td>
+                    <td class="p-3">Class ${escapeHtml(r.s.class)} ${escapeHtml(r.s.section || '')}</td>
+                    <td class="p-3">Rs. ${money(r.pay)}</td>
+                    <td class="p-3 text-emerald-700">Rs. ${money(r.paid)}</td>
+                    <td class="p-3 font-bold text-red-600">Rs. ${money(r.bal)}</td>
+                </tr>`).join('') || '<tr><td colspan="5" class="p-4 text-center text-gray-400">No outstanding fees for this month 🎉</td></tr>';
         }
 
         function renderRecentStudents() {
             const tbody = document.getElementById('recentStudentsBody');
             const recent = appData.students.slice(-5).reverse();
             tbody.innerHTML = recent.map(s => `
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="p-3">${s.name}</td><td class="p-3">${s.fatherName}</td>
-                    <td class="p-3">Class ${s.class} ${s.section || ''}</td><td class="p-3">${s.phone || '-'}</td>
-                    <td class="p-3">Rs. ${(parseFloat(s.fee) || 0) + (parseFloat(s.stationary) || 0) + (parseFloat(s.otherCharges) || 0) + (parseFloat(s.examFee) || 0) + (parseFloat(s.annualFee) || 0) + (parseFloat(s.books) || 0)}</td>
+                <tr class="border-b hover:bg-gray-50 cursor-pointer" onclick="openStudentDetail('${s.id}')">
+                    <td class="p-3 font-medium">${escapeHtml(s.name)}</td>
+                    <td class="p-3">${escapeHtml(s.fatherName)}</td>
+                    <td class="p-3">Class ${escapeHtml(s.class)} ${escapeHtml(s.section || '')}</td>
+                    <td class="p-3">${escapeHtml(s.phone || '-')}</td>
+                    <td class="p-3">Rs. ${money(monthlyPayable(s))}</td>
                 </tr>
             `).join('') || '<tr><td colspan="5" class="p-4 text-center text-gray-400">No students yet</td></tr>';
         }
 
+        /* =========================================================
+           STUDENTS TABLE
+           ========================================================= */
         function renderStudents() {
+            const q = (document.getElementById('searchStudent').value || '').trim().toLowerCase();
             const classFilter = document.getElementById('filterStudentClass').value;
             const statusFilter = document.getElementById('filterStudentStatus').value;
+            const feeFilter = document.getElementById('filterStudentFee').value;
+            const month = document.getElementById('studentMonth').value;
+            const year = document.getElementById('studentYear').value;
+
             const tbody = document.getElementById('studentsTableBody');
-            tbody.innerHTML = '';
-            appData.students.forEach((s, index) => {
-                if ((classFilter === 'All' || s.class === classFilter) && (statusFilter === 'All' || s.status === statusFilter)) {
-                    const totalFee = (parseFloat(s.fee) || 0) + (parseFloat(s.stationary) || 0) + (parseFloat(s.otherCharges) || 0) + (parseFloat(s.examFee) || 0) + (parseFloat(s.annualFee) || 0) + (parseFloat(s.books) || 0);
-                    tbody.innerHTML += `
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="p-3">${s.name}</td><td class="p-3">${s.fatherName}</td>
-                            <td class="p-3">Class ${s.class} ${s.section || ''}</td><td class="p-3">${s.phone || '-'}</td>
-                            <td class="p-3">Rs. ${totalFee}</td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs ${s.status === 'Active' ? 'bg-green-100 text-green-800' : s.status === 'Suspended' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${s.status}</span></td>
-                            <td class="p-3">
-                                <button onclick="deleteItem('students', ${index})" class="text-red-400 hover:text-red-600" title="Delete"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>`;
+            let count = 0;
+            let html = '';
+
+            appData.students.forEach((s) => {
+                if (classFilter !== 'All' && s.class !== classFilter) return;
+                if (statusFilter !== 'All' && s.status !== statusFilter) return;
+                if (q) {
+                    const hay = [s.name, s.fatherName, s.phone, s.id, s.class, s.section, s.address]
+                        .filter(Boolean).join(' ').toLowerCase();
+                    if (!hay.includes(q)) return;
                 }
+
+                const na = isBeforeAdmission(s, month, year);
+                const payable = na ? 0 : monthlyPayable(s);
+                const paid = paidInMonth(s.id, s.name, month, year);
+                const balance = Math.max(0, payable - paid);
+                const st = monthStatus(payable, paid, na);
+
+                if (feeFilter !== 'All' && st !== feeFilter) return;
+
+                count++;
+                const statusPill = s.status === 'Active'
+                    ? 'bg-green-100 text-green-800'
+                    : s.status === 'Suspended'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800';
+
+                html += `
+                    <tr class="border-b hover:bg-yellow-50/40">
+                        <td class="p-3">
+                            <div class="font-semibold text-gray-800">${escapeHtml(s.name)}</div>
+                            <div class="text-[10px] text-gray-400">${escapeHtml(s.id)}</div>
+                        </td>
+                        <td class="p-3">${escapeHtml(s.fatherName)}</td>
+                        <td class="p-3">Class ${escapeHtml(s.class)} ${escapeHtml(s.section || '')}</td>
+                        <td class="p-3">${escapeHtml(s.phone || '-')}</td>
+                        <td class="p-3 font-medium">Rs. ${money(monthlyPayable(s))}</td>
+                        <td class="p-3 text-emerald-700">Rs. ${money(paid)}</td>
+                        <td class="p-3 font-bold ${balance > 0 ? 'text-red-600' : 'text-gray-400'}">Rs. ${money(balance)}</td>
+                        <td class="p-3">${statusBadge(st)}</td>
+                        <td class="p-3">
+                            <div class="flex items-center gap-2">
+                                <button onclick="openStudentDetail('${s.id}')" class="text-yellow-600 hover:text-yellow-800" title="View / Edit / History"><i class="fas fa-eye"></i></button>
+                                <button onclick="collectFor('${s.id}','${escapeHtml(month)}','${escapeHtml(year)}')" class="text-emerald-600 hover:text-emerald-800" title="Collect Fee"><i class="fas fa-hand-holding-usd"></i></button>
+                                <button onclick="deleteStudent('${s.id}')" class="text-red-400 hover:text-red-600" title="Delete"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <div class="mt-1"><span class="px-2 py-0.5 rounded-full text-[10px] ${statusPill}">${escapeHtml(s.status)}</span></div>
+                        </td>
+                    </tr>`;
             });
-            if (!tbody.innerHTML) tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-400">No students found</td></tr>';
+
+            tbody.innerHTML = html || '<tr><td colspan="9" class="p-4 text-center text-gray-400">No students match your filters</td></tr>';
+            document.getElementById('studentCountLabel').textContent = `${count} student(s) listed`;
         }
 
+        /* =========================================================
+           MONTHLY LEDGER
+           ========================================================= */
+        function setLedgerFilter(f, btn) {
+            ledgerFilter = f;
+            document.querySelectorAll('[data-ledger-filter]').forEach(b => {
+                b.classList.remove('active', 'danger', 'warn', 'ok');
+            });
+            btn.classList.add('active');
+            if (f === 'Due') btn.classList.add('danger');
+            if (f === 'Partial') btn.classList.add('warn');
+            if (f === 'Paid') btn.classList.add('ok');
+            renderLedger();
+        }
+
+        function buildLedgerRows(month, year) {
+            const rows = [];
+            appData.students.filter(s => s.status !== 'Deleted').forEach(s => {
+                const na = isBeforeAdmission(s, month, year);
+                const payable = na ? 0 : monthlyPayable(s);
+                const paid = paidInMonth(s.id, s.name, month, year);
+                const balance = Math.max(0, payable - paid);
+                const st = monthStatus(payable, paid, na);
+                rows.push({ s, na, payable, paid, balance, st });
+            });
+            return rows;
+        }
+
+        function renderLedger() {
+            const month = document.getElementById('ledgerMonth').value;
+            const year = document.getElementById('ledgerYear').value;
+            const q = (document.getElementById('searchLedger').value || '').trim().toLowerCase();
+            const cls = document.getElementById('ledgerClass').value;
+
+            const baseRows = buildLedgerRows(month, year)
+                .filter(r => cls === 'All' || r.s.class === cls)
+                .filter(r => {
+                    if (!q) return true;
+                    const hay = [r.s.name, r.s.fatherName, r.s.phone, r.s.id].filter(Boolean).join(' ').toLowerCase();
+                    return hay.includes(q);
+                });
+
+            let rows = baseRows;
+            if (ledgerFilter !== 'All') rows = rows.filter(r => r.st === ledgerFilter);
+
+            const totalPayable = baseRows.reduce((a, r) => a + r.payable, 0);
+            const totalPaid = baseRows.reduce((a, r) => a + r.paid, 0);
+            const totalBalance = baseRows.reduce((a, r) => a + r.balance, 0);
+            const dueCount = baseRows.filter(r => r.balance > 0).length;
+
+            document.getElementById('ledgerTotalPayable').textContent = money(totalPayable);
+            document.getElementById('ledgerTotalPaid').textContent = money(totalPaid);
+            document.getElementById('ledgerTotalBalance').textContent = money(totalBalance);
+            document.getElementById('ledgerDueCount').textContent = dueCount;
+            document.getElementById('ledgerStudentCount').textContent = baseRows.length;
+
+            const tbody = document.getElementById('ledgerBody');
+            tbody.innerHTML = rows.map((r, i) => `
+                <tr class="border-b hover:bg-yellow-50/40">
+                    <td class="p-3 text-gray-400 text-xs">${i + 1}</td>
+                    <td class="p-3">
+                        <div class="font-semibold text-gray-800 cursor-pointer hover:text-yellow-700" onclick="openStudentDetail('${r.s.id}')">${escapeHtml(r.s.name)}</div>
+                        <div class="text-[10px] text-gray-400">${escapeHtml(r.s.id)}</div>
+                    </td>
+                    <td class="p-3">${escapeHtml(r.s.fatherName)}</td>
+                    <td class="p-3">Class ${escapeHtml(r.s.class)} ${escapeHtml(r.s.section || '')}</td>
+                    <td class="p-3 text-right">Rs. ${money(r.payable)}</td>
+                    <td class="p-3 text-right text-emerald-700">Rs. ${money(r.paid)}</td>
+                    <td class="p-3 text-right font-bold ${r.balance > 0 ? 'text-red-600' : 'text-gray-400'}">Rs. ${money(r.balance)}</td>
+                    <td class="p-3">${statusBadge(r.st)}</td>
+                    <td class="p-3">
+                        ${r.st === 'Paid' || r.na
+                            ? `<button onclick="openStudentDetail('${r.s.id}')" class="text-yellow-600 hover:text-yellow-800 text-xs"><i class="fas fa-eye"></i></button>`
+                            : `<button onclick="collectFor('${r.s.id}','${escapeHtml(month)}','${escapeHtml(year)}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg"><i class="fas fa-hand-holding-usd mr-1"></i>Collect</button>`
+                        }
+                    </td>
+                </tr>`).join('') || '<tr><td colspan="9" class="p-6 text-center text-gray-400">No records for the selected filters</td></tr>';
+
+            document.getElementById('ledgerFoot').innerHTML = `
+                <tr>
+                    <td colspan="4" class="p-3 text-right">Totals (all matching students):</td>
+                    <td class="p-3 text-right">Rs. ${money(totalPayable)}</td>
+                    <td class="p-3 text-right text-emerald-700">Rs. ${money(totalPaid)}</td>
+                    <td class="p-3 text-right text-red-600">Rs. ${money(totalBalance)}</td>
+                    <td colspan="2" class="p-3">${dueCount} with dues</td>
+                </tr>`;
+        }
+
+        function exportLedgerCSV() {
+            const month = document.getElementById('ledgerMonth').value;
+            const year = document.getElementById('ledgerYear').value;
+            const cls = document.getElementById('ledgerClass').value;
+            const q = (document.getElementById('searchLedger').value || '').trim().toLowerCase();
+
+            let rows = buildLedgerRows(month, year);
+            if (cls !== 'All') rows = rows.filter(r => r.s.class === cls);
+            if (q) rows = rows.filter(r => [r.s.name, r.s.fatherName, r.s.phone, r.s.id].filter(Boolean).join(' ').toLowerCase().includes(q));
+            if (ledgerFilter !== 'All') rows = rows.filter(r => r.st === ledgerFilter);
+
+            const header = ['Student ID', 'Name', 'Father', 'Class', 'Section', 'Phone', 'Monthly Payable', 'Paid', 'Balance', 'Status', 'Month', 'Year'];
+            const lines = [header.join(',')];
+            rows.forEach(r => {
+                lines.push([
+                    r.s.id, r.s.name, r.s.fatherName, r.s.class, r.s.section || '', r.s.phone || '',
+                    r.payable, r.paid, r.balance, r.st, month, year
+                ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+            });
+            const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `DRQ-Ledger-${month}-${year}.csv`;
+            link.click();
+            showToast('Ledger CSV exported.', 'success');
+        }
+
+        async function markAllPaidPrompt() {
+            const month = document.getElementById('ledgerMonth').value;
+            const year = document.getElementById('ledgerYear').value;
+            const cls = document.getElementById('ledgerClass').value;
+            let rows = buildLedgerRows(month, year).filter(r => r.balance > 0 && !r.na);
+            if (cls !== 'All') rows = rows.filter(r => r.s.class === cls);
+
+            if (!rows.length) { showToast('No outstanding balances to collect.', 'info'); return; }
+
+            const total = rows.reduce((a, r) => a + r.balance, 0);
+            const confirmed = await customConfirm(
+                'Bulk collect all dues?',
+                `This will record a Cash payment for ${rows.length} student(s) totalling Rs. ${money(total)} for ${month} ${year}.`,
+                { okText: 'Collect All', cancelText: 'Cancel', variant: 'success', icon: 'fa-list-check' }
+            );
+            if (!confirmed) return;
+
+            opStart('Recording bulk payments...', `POST /${API_PREFIX}/save → fees.json`);
+            rows.forEach(r => {
+                appData.fees.push({
+                    id: uid('FEE'),
+                    studentId: r.s.id,
+                    studentName: r.s.name,
+                    month, year,
+                    description: `Monthly Fee (bulk)`,
+                    amount: r.balance,
+                    method: 'Cash',
+                    date: todayISO()
+                });
+            });
+            const ok = await saveDataset('fees');
+            refreshAll();
+            opStop();
+            showToast(ok ? `${rows.length} payment(s) recorded.` : 'Save failed — check CORS.', ok ? 'success' : 'error');
+        }
+
+        /* =========================================================
+           STAFF
+           ========================================================= */
         function renderStaff() {
+            const q = (document.getElementById('searchStaff').value || '').trim().toLowerCase();
             const tbody = document.getElementById('staffTableBody');
-            tbody.innerHTML = appData.staff.map((s, index) => {
-                const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-                const currentYear = new Date().getFullYear().toString();
-                const paid = appData.salaryPayments.find(p => p.staffIndex === index && p.month === currentMonth && p.year === currentYear);
+            const cm = currentMonthName(), cy = currentYearStr();
+
+            const rows = appData.staff.map((s, index) => ({ s, index })).filter(({ s }) => {
+                if (!q) return true;
+                return [s.name, s.designation, s.subject, s.phone, s.qualification]
+                    .filter(Boolean).join(' ').toLowerCase().includes(q);
+            });
+
+            tbody.innerHTML = rows.map(({ s, index }) => {
+                const paid = appData.salaryPayments.find(p => p.staffIndex === index && p.month === cm && p.year === cy);
                 return `
                     <tr class="border-b hover:bg-gray-50">
-                        <td class="p-3">${s.name}</td><td class="p-3">${s.designation}</td><td class="p-3">${s.subject || '-'}</td>
-                        <td class="p-3">${s.phone || '-'}</td><td class="p-3">Rs. ${s.salary}</td>
+                        <td class="p-3 font-medium">${escapeHtml(s.name)}</td>
+                        <td class="p-3">${escapeHtml(s.designation)}</td>
+                        <td class="p-3">${escapeHtml(s.subject || '-')}</td>
+                        <td class="p-3">${escapeHtml(s.phone || '-')}</td>
+                        <td class="p-3">Rs. ${money(s.salary)}</td>
                         <td class="p-3">${paid ? '<span class="paid-badge">Paid</span>' : '<span class="due-badge">Due</span>'}</td>
                         <td class="p-3 flex gap-2">
                             <button onclick="paySalary(${index})" class="text-green-600 hover:text-green-700" title="Pay Salary"><i class="fas fa-hand-holding-usd"></i></button>
@@ -1568,77 +1770,142 @@
             }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-400">No staff members</td></tr>';
         }
 
+        /* =========================================================
+           FEES LIST
+           ========================================================= */
         function renderFees() {
+            const q = (document.getElementById('searchFee').value || '').trim().toLowerCase();
+            const fm = document.getElementById('filterFeeMonth').value;
+            const fy = document.getElementById('filterFeeYear').value;
             const tbody = document.getElementById('feesTableBody');
-            tbody.innerHTML = appData.fees.map((f, index) => `
+
+            const rows = appData.fees
+                .map((f, index) => ({ f, index }))
+                .filter(({ f }) => {
+                    if (fm !== 'All' && f.month !== fm) return false;
+                    if (fy !== 'All' && String(f.year) !== fy) return false;
+                    if (!q) return true;
+                    return [f.studentName, f.description, f.method, f.month, f.year]
+                        .filter(Boolean).join(' ').toLowerCase().includes(q);
+                })
+                .reverse();
+
+            tbody.innerHTML = rows.map(({ f, index }) => `
                 <tr class="border-b hover:bg-gray-50">
-                    <td class="p-3">${f.date}</td><td class="p-3">${f.studentName}</td><td class="p-3">${f.month} ${f.year}</td>
-                    <td class="p-3">${f.description}</td><td class="p-3 font-semibold">Rs. ${f.amount}</td><td class="p-3">${f.method}</td>
-                    <td class="p-3 flex gap-1">
-                        <button onclick="editFee(${index})" class="text-yellow-500 hover:text-yellow-600" title="Edit"><i class="fas fa-pen"></i></button>
-                        <button onclick="viewVoucher(${index})" class="text-blue-400 hover:text-blue-600" title="View voucher"><i class="fas fa-receipt"></i></button>
-                        <button onclick="deleteItem('fees', ${index})" class="text-red-400 hover:text-red-600" title="Delete"><i class="fas fa-trash"></i></button>
+                    <td class="p-3">${escapeHtml(f.date)}</td>
+                    <td class="p-3 font-medium text-gray-800">${escapeHtml(f.studentName)}</td>
+                    <td class="p-3">${escapeHtml(f.month)} ${escapeHtml(f.year)}</td>
+                    <td class="p-3">${escapeHtml(f.description)}</td>
+                    <td class="p-3 font-semibold text-emerald-700">Rs. ${money(f.amount)}</td>
+                    <td class="p-3">${escapeHtml(f.method)}</td>
+                    <td class="p-3">
+                        <div class="flex gap-2">
+                            <button onclick="editFee(${index})" class="text-yellow-500 hover:text-yellow-600" title="Edit"><i class="fas fa-pen"></i></button>
+                            <button onclick="viewVoucher('${f.id}')" class="text-blue-400 hover:text-blue-600" title="View voucher"><i class="fas fa-receipt"></i></button>
+                            <button onclick="deleteItem('fees', ${index})" class="text-red-400 hover:text-red-600" title="Delete"><i class="fas fa-trash"></i></button>
+                        </div>
                     </td>
                 </tr>
             `).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-400">No fee records</td></tr>';
         }
 
+        /* =========================================================
+           EXPENSES
+           ========================================================= */
         function renderExpenses() {
+            const q = (document.getElementById('searchExpense').value || '').trim().toLowerCase();
+            const cat = document.getElementById('filterExpenseCategory').value;
             const tbody = document.getElementById('expensesTableBody');
-            tbody.innerHTML = appData.expenses.map((e, index) => `
+
+            const rows = appData.expenses
+                .map((e, index) => ({ e, index }))
+                .filter(({ e }) => {
+                    if (cat !== 'All' && e.category !== cat) return false;
+                    if (!q) return true;
+                    return [e.description, e.category, e.method, e.date].filter(Boolean).join(' ').toLowerCase().includes(q);
+                })
+                .reverse();
+
+            tbody.innerHTML = rows.map(({ e, index }) => `
                 <tr class="border-b hover:bg-gray-50">
-                    <td class="p-3">${e.date}</td><td class="p-3">${e.category}</td><td class="p-3">${e.description}</td>
-                    <td class="p-3 text-red-600">Rs. ${e.amount}</td><td class="p-3">${e.method}</td>
+                    <td class="p-3">${escapeHtml(e.date)}</td>
+                    <td class="p-3">${escapeHtml(e.category)}</td>
+                    <td class="p-3">${escapeHtml(e.description)}</td>
+                    <td class="p-3 text-red-600 font-semibold">Rs. ${money(e.amount)}</td>
+                    <td class="p-3">${escapeHtml(e.method)}</td>
                     <td class="p-3"><button onclick="deleteItem('expenses', ${index})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('') || '<tr><td colspan="6" class="p-4 text-center text-gray-400">No expenses</td></tr>';
         }
 
+        /* =========================================================
+           ASSETS
+           ========================================================= */
         function renderAssets() {
+            const q = (document.getElementById('searchAsset').value || '').trim().toLowerCase();
             const tbody = document.getElementById('assetsTableBody');
-            tbody.innerHTML = appData.assets.map((a, index) => `
+            const rows = appData.assets
+                .map((a, index) => ({ a, index }))
+                .filter(({ a }) => {
+                    if (!q) return true;
+                    return [a.name, a.category, a.condition].filter(Boolean).join(' ').toLowerCase().includes(q);
+                });
+
+            tbody.innerHTML = rows.map(({ a, index }) => `
                 <tr class="border-b hover:bg-gray-50">
-                    <td class="p-3">${a.name}</td><td class="p-3">${a.category}</td><td class="p-3">${a.purchaseDate}</td>
-                    <td class="p-3">Rs. ${a.cost}</td><td class="p-3">${a.condition}</td>
+                    <td class="p-3 font-medium">${escapeHtml(a.name)}</td>
+                    <td class="p-3">${escapeHtml(a.category)}</td>
+                    <td class="p-3">${escapeHtml(a.purchaseDate)}</td>
+                    <td class="p-3">Rs. ${money(a.cost)}</td>
+                    <td class="p-3">${escapeHtml(a.condition)}</td>
                     <td class="p-3"><button onclick="deleteItem('assets', ${index})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('') || '<tr><td colspan="6" class="p-4 text-center text-gray-400">No assets</td></tr>';
         }
 
+        /* =========================================================
+           STUDENT DROPDOWN (fee form)
+           ========================================================= */
         function populateStudentDropdown() {
             const select = document.querySelector('#feeForm select[name="studentId"]');
             if (!select) return;
             const currentVal = select.value;
             select.innerHTML = '<option value="">Select Student *</option>';
-            appData.students.filter(s => s.status === 'Active').forEach((s, idx) => {
-                select.innerHTML += `<option value="${idx}">${s.name} (Class ${s.class})</option>`;
-            });
-            if (currentVal) select.value = currentVal;
+            appData.students
+                .filter(s => s.status !== 'Deleted')
+                .sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+                .forEach(s => {
+                    select.innerHTML += `<option value="${s.id}">${escapeHtml(s.name)} — Class ${escapeHtml(s.class)}</option>`;
+                });
+            if (currentVal && select.querySelector(`option[value="${currentVal}"]`)) select.value = currentVal;
         }
 
         /* =========================================================
            CHARTS
            ========================================================= */
         function renderCharts() {
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const monthlyFees = months.map(m => appData.fees.filter(f => f.month && f.month.startsWith(m)).reduce((sum, f) => sum + parseFloat(f.amount || 0), 0));
+            const monthlyFees = MONTHS.map(m =>
+                appData.fees.filter(f => f.month === m).reduce((sum, f) => sum + num(f.amount), 0)
+            );
             const ctxFee = document.getElementById('feeChart').getContext('2d');
             if (feeChartInstance) feeChartInstance.destroy();
             feeChartInstance = new Chart(ctxFee, {
                 type: 'bar',
-                data: { labels: months, datasets: [{ label: 'Fee Collection (Rs.)', data: monthlyFees, backgroundColor: '#fdd803', borderRadius: 6 }] },
+                data: { labels: MONTH_SHORT, datasets: [{ label: 'Fee Collection (Rs.)', data: monthlyFees, backgroundColor: '#fdd803', borderRadius: 6 }] },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
 
             const classCounts = {};
-            appData.students.forEach(s => { classCounts[s.class] = (classCounts[s.class] || 0) + 1; });
+            appData.students.filter(s => s.status !== 'Deleted').forEach(s => {
+                classCounts[s.class] = (classCounts[s.class] || 0) + 1;
+            });
             const classLabels = Object.keys(classCounts);
             const classData = classLabels.map(k => classCounts[k]);
             const ctxClass = document.getElementById('classChart').getContext('2d');
             if (classChartInstance) classChartInstance.destroy();
             classChartInstance = new Chart(ctxClass, {
                 type: 'doughnut',
-                data: { labels: classLabels, datasets: [{ data: classData, backgroundColor: ['#fdd803', '#d4b402', '#1a1a1a', '#3b82f6', '#10b981', '#ef4444', '#8b5cf6', '#f97316'] }] },
+                data: { labels: classLabels, datasets: [{ data: classData, backgroundColor: ['#fdd803','#d4b402','#1a1a1a','#3b82f6','#10b981','#ef4444','#8b5cf6','#f97316'] }] },
                 options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
             });
         }
@@ -1652,32 +1919,239 @@
         }
         function closeModal(id) {
             document.getElementById(id).classList.add('hidden');
+            if (id === 'studentDetailModal') { currentStudentId = null; return; }
             const form = document.querySelector(`#${id} form`);
             if (form) form.reset();
             if (id === 'feeModal') {
                 document.getElementById('feeEditIndex').value = '';
                 document.getElementById('feeModalTitle').textContent = 'Collect Fee';
                 document.getElementById('feeSubmitBtn').textContent = 'Save & Generate Voucher';
+                document.getElementById('feeBalanceHint').classList.add('hidden');
             }
         }
 
         /* =========================================================
-           CRUD — each save shows the operation overlay
+           STUDENT DETAIL MODAL
+           ========================================================= */
+        function openStudentDetail(studentId) {
+            const s = findStudent(studentId);
+            if (!s) { showToast('Student not found.', 'error'); return; }
+            currentStudentId = s.id;
+            renderStudentDetail();
+            switchStudentTab('sdProfile');
+            openModal('studentDetailModal');
+        }
+
+        function switchStudentTab(tabId) {
+            document.querySelectorAll('.sd-tab-pane').forEach(p => p.classList.add('hidden'));
+            const pane = document.getElementById(tabId);
+            if (pane) pane.classList.remove('hidden');
+            document.querySelectorAll('#studentDetailModal .tab-btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-tab') === tabId);
+            });
+        }
+
+        function renderStudentDetail() {
+            const s = findStudent(currentStudentId);
+            if (!s) return;
+
+            document.getElementById('sdAvatar').textContent = (s.name || 'S').charAt(0).toUpperCase();
+            document.getElementById('sdName').textContent = s.name;
+            document.getElementById('sdSub').textContent = `Class ${s.class}${s.section ? ' ' + s.section : ''} · Father: ${s.fatherName} · ${s.phone || 'No phone'}`;
+
+            const cm = currentMonthName(), cy = currentYearStr();
+            const paidThisMonth = paidInMonth(s.id, s.name, cm, cy);
+            const balThisMonth = Math.max(0, monthlyPayable(s) - paidThisMonth);
+            const lifetime = totalPaidLifetime(s.id, s.name);
+
+            document.getElementById('sdBadges').innerHTML = `
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${s.status === 'Active' ? 'bg-green-100 text-green-800' : s.status === 'Suspended' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${escapeHtml(s.status)}</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-yellow-100 text-yellow-800">${cm} balance: Rs. ${money(balThisMonth)}</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-100 text-indigo-800">Lifetime paid: Rs. ${money(lifetime)}</span>
+            `;
+
+            const f = document.getElementById('feeStructureForm');
+            f.name.value = s.name || '';
+            f.fatherName.value = s.fatherName || '';
+            f.class.value = s.class || 'Play';
+            f.section.value = s.section || '';
+            f.phone.value = s.phone || '';
+            f.status.value = s.status || 'Active';
+            f.address.value = s.address || '';
+            f.admissionDate.value = s.admissionDate || '';
+            f.fee.value = s.fee || '';
+            f.stationary.value = s.stationary || '';
+            f.otherCharges.value = s.otherCharges || '';
+            f.discount.value = s.discount || '';
+            f.examFee.value = s.examFee || '';
+            f.annualFee.value = s.annualFee || '';
+            f.books.value = s.books || '';
+
+            document.getElementById('sdMonthlyPayable').textContent = 'Rs. ' + money(monthlyPayable(s));
+            document.getElementById('sdOneTime').textContent = 'Rs. ' + money(oneTimeDues(s));
+            document.getElementById('sdTotalPaid').textContent = 'Rs. ' + money(lifetime);
+
+            renderStudentHistory(s);
+            renderStudentLedger(s);
+        }
+
+        function renderStudentHistory(s) {
+            const list = feesForStudent(s.id, s.name)
+                .slice()
+                .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+            const total = list.reduce((a, f) => a + num(f.amount), 0);
+            document.getElementById('sdHistorySummary').textContent = `${list.length} payment(s) · Total Rs. ${money(total)}`;
+
+            const tbody = document.getElementById('sdHistoryBody');
+            tbody.innerHTML = list.map(f => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-3">${escapeHtml(f.date)}</td>
+                    <td class="p-3">${escapeHtml(f.month)} ${escapeHtml(f.year)}</td>
+                    <td class="p-3">${escapeHtml(f.description)}</td>
+                    <td class="p-3">${escapeHtml(f.method)}</td>
+                    <td class="p-3 text-right font-semibold text-emerald-700">Rs. ${money(f.amount)}</td>
+                    <td class="p-3">
+                        <div class="flex gap-2">
+                            <button onclick="viewVoucher('${f.id}')" class="text-blue-500 hover:text-blue-700" title="Voucher"><i class="fas fa-receipt"></i></button>
+                            <button onclick="editFeeById('${f.id}')" class="text-yellow-500 hover:text-yellow-600" title="Edit"><i class="fas fa-pen"></i></button>
+                            <button onclick="deleteFeeById('${f.id}')" class="text-red-400 hover:text-red-600" title="Delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>`).join('') || '<tr><td colspan="6" class="p-4 text-center text-gray-400">No payments recorded yet</td></tr>';
+        }
+
+        function renderStudentLedger(s) {
+            const months = monthsBackList(12);
+            const extra = new Set();
+            feesForStudent(s.id, s.name).forEach(f => {
+                const key = `${f.month} ${f.year}`;
+                if (!months.some(m => `${m.month} ${m.year}` === key)) extra.add(key);
+            });
+            extra.forEach(key => {
+                const [m, y] = key.split(' ');
+                months.push({ month: m, year: y });
+            });
+            months.sort((a, b) => {
+                const ay = parseInt(a.year, 10), by = parseInt(b.year, 10);
+                if (ay !== by) return by - ay;
+                return MONTH_INDEX[b.month] - MONTH_INDEX[a.month];
+            });
+
+            let totalPayable = 0, totalPaid = 0, totalBal = 0;
+            const rowsHtml = months.map(m => {
+                const na = isBeforeAdmission(s, m.month, m.year);
+                const payable = na ? 0 : monthlyPayable(s);
+                const paid = paidInMonth(s.id, s.name, m.month, m.year);
+                const bal = Math.max(0, payable - paid);
+                const st = monthStatus(payable, paid, na);
+                if (!na) { totalPayable += payable; totalPaid += paid; totalBal += bal; }
+                return `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">${escapeHtml(m.month)}</td>
+                        <td class="p-3">${escapeHtml(m.year)}</td>
+                        <td class="p-3 text-right">Rs. ${money(payable)}</td>
+                        <td class="p-3 text-right text-emerald-700">Rs. ${money(paid)}</td>
+                        <td class="p-3 text-right font-semibold ${bal > 0 ? 'text-red-600' : 'text-gray-400'}">Rs. ${money(bal)}</td>
+                        <td class="p-3">${statusBadge(st)}</td>
+                        <td class="p-3">
+                            ${st === 'Paid' || na ? '' : `<button onclick="collectFor('${s.id}','${escapeHtml(m.month)}','${escapeHtml(m.year)}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg"><i class="fas fa-hand-holding-usd mr-1"></i>Collect</button>`}
+                        </td>
+                    </tr>`;
+            }).join('');
+
+            document.getElementById('sdLedgerBody').innerHTML = rowsHtml || '<tr><td colspan="7" class="p-4 text-center text-gray-400">No ledger data</td></tr>';
+            document.getElementById('sdLedgerSummary').textContent =
+                `Payable Rs. ${money(totalPayable)} · Paid Rs. ${money(totalPaid)} · Outstanding Rs. ${money(totalBal)}`;
+        }
+
+        document.getElementById('feeStructureForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const s = findStudent(currentStudentId);
+            if (!s) return;
+            const form = e.target;
+            const data = Object.fromEntries(new FormData(form));
+
+            const oldName = s.name;
+            s.name = data.name.trim();
+            s.fatherName = data.fatherName.trim();
+            s.class = data.class;
+            s.section = data.section;
+            s.phone = data.phone;
+            s.status = data.status;
+            s.address = data.address;
+            s.admissionDate = data.admissionDate;
+            s.fee = num(data.fee);
+            s.stationary = num(data.stationary);
+            s.otherCharges = num(data.otherCharges);
+            s.discount = num(data.discount);
+            s.examFee = num(data.examFee);
+            s.annualFee = num(data.annualFee);
+            s.books = num(data.books);
+
+            if (oldName !== s.name) {
+                appData.fees.forEach(f => { if (f.studentId === s.id) f.studentName = s.name; });
+            }
+
+            opStart('Saving student fee structure...', `POST /${API_PREFIX}/save → students.json`);
+            const ok1 = await saveDataset('students');
+            const ok2 = oldName !== s.name ? await saveDataset('fees') : true;
+            opStop();
+
+            renderStudentDetail();
+            refreshAll();
+            showToast(ok1 && ok2 ? 'Student & fee structure updated.' : 'Save failed — check CORS.', ok1 && ok2 ? 'success' : 'error');
+        });
+
+        function updateStudentFormPreview() {
+            const f = document.getElementById('studentForm');
+            if (!f) return;
+            const monthly = num(f.fee.value) + num(f.stationary.value) + num(f.otherCharges.value) - num(f.discount.value);
+            const oneTime = num(f.examFee.value) + num(f.annualFee.value) + num(f.books.value);
+            document.getElementById('previewMonthly').textContent = 'Rs. ' + money(monthly);
+            document.getElementById('previewOneTime').textContent = 'Rs. ' + money(oneTime);
+        }
+        ['fee','stationary','otherCharges','discount','examFee','annualFee','books'].forEach(n => {
+            const el = document.querySelector(`#studentForm [name="${n}"]`);
+            if (el) el.addEventListener('input', updateStudentFormPreview);
+        });
+
+        /* =========================================================
+           CRUD
            ========================================================= */
         document.getElementById('studentForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            opStart('Saving student...', 'POST /drq/save → students.json');
-            appData.students.push(Object.fromEntries(new FormData(e.target)));
+            opStart('Saving student...', `POST /${API_PREFIX}/save → students.json`);
+            const raw = Object.fromEntries(new FormData(e.target));
+            const student = {
+                id: uid('STU'),
+                name: (raw.name || '').trim(),
+                fatherName: (raw.fatherName || '').trim(),
+                class: raw.class,
+                section: raw.section || '',
+                phone: raw.phone || '',
+                status: raw.status || 'Active',
+                address: raw.address || '',
+                admissionDate: raw.admissionDate || '',
+                fee: num(raw.fee),
+                stationary: num(raw.stationary),
+                otherCharges: num(raw.otherCharges),
+                discount: num(raw.discount),
+                examFee: num(raw.examFee),
+                annualFee: num(raw.annualFee),
+                books: num(raw.books)
+            };
+            appData.students.push(student);
             closeModal('studentModal');
             const ok = await saveDataset('students');
-            renderStudents(); populateStudentDropdown(); renderRecentStudents(); updateDashboard();
+            refreshAll();
             opStop();
             showToast(ok ? 'Student saved.' : 'Save failed — check CORS.', ok ? 'success' : 'error');
         });
 
         document.getElementById('staffForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            opStart('Saving staff member...', 'POST /drq/save → staff.json');
+            opStart('Saving staff member...', `POST /${API_PREFIX}/save → staff.json`);
             appData.staff.push(Object.fromEntries(new FormData(e.target)));
             closeModal('staffModal');
             const ok = await saveDataset('staff');
@@ -1689,21 +2163,29 @@
         document.getElementById('feeForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(e.target));
-            const student = appData.students[data.studentId];
+            const student = findStudent(data.studentId);
+            data.studentId = student ? student.id : '';
             data.studentName = student ? student.name : 'Unknown';
+            data.amount = num(data.amount);
+            data.year = String(data.year);
+
             const editIndex = document.getElementById('feeEditIndex').value;
             if (editIndex !== '') {
-                data.date = appData.fees[editIndex].date;
-                appData.fees[editIndex] = data;
+                const original = appData.fees[parseInt(editIndex, 10)];
+                data.id = original.id || uid('FEE');
+                data.date = original.date;
+                appData.fees[parseInt(editIndex, 10)] = data;
             } else {
-                data.date = new Date().toISOString().split('T')[0];
+                data.id = uid('FEE');
+                data.date = todayISO();
                 appData.fees.push(data);
             }
+
             closeModal('feeModal');
-            opStart('Saving fee record...', 'POST /drq/save → fees.json');
+            opStart('Saving fee record...', `POST /${API_PREFIX}/save → fees.json`);
             const ok = await saveDataset('fees');
-            renderFees(); renderCharts(); updateDashboard();
-            viewVoucher(editIndex !== '' ? parseInt(editIndex) : appData.fees.length - 1);
+            refreshAll();
+            viewVoucher(data.id);
             showSection('reports');
             opStop();
             showToast(ok ? 'Fee saved & voucher generated.' : 'Save failed — check CORS.', ok ? 'success' : 'error');
@@ -1711,7 +2193,7 @@
 
         document.getElementById('expenseForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            opStart('Saving expense...', 'POST /drq/save → expenses.json');
+            opStart('Saving expense...', `POST /${API_PREFIX}/save → expenses.json`);
             appData.expenses.push(Object.fromEntries(new FormData(e.target)));
             closeModal('expenseModal');
             const ok = await saveDataset('expenses');
@@ -1722,7 +2204,7 @@
 
         document.getElementById('assetForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            opStart('Saving asset...', 'POST /drq/save → assets.json');
+            opStart('Saving asset...', `POST /${API_PREFIX}/save → assets.json`);
             appData.assets.push(Object.fromEntries(new FormData(e.target)));
             closeModal('assetModal');
             const ok = await saveDataset('assets');
@@ -1739,39 +2221,61 @@
                 { okText: 'Delete', cancelText: 'Keep it', variant: 'danger', icon: 'fa-triangle-exclamation' }
             );
             if (!confirmed) return;
-            opStart('Deleting record...', `POST /drq/save → ${FILES[type]}`);
+            opStart('Deleting record...', `POST /${API_PREFIX}/save → ${FILES[type]}`);
             appData[type].splice(index, 1);
             await saveDataset(type);
-            if (type === 'students') { renderStudents(); populateStudentDropdown(); renderRecentStudents(); updateDashboard(); }
+            if (type === 'students') { refreshAll(); }
             if (type === 'staff') { renderStaff(); updateDashboard(); }
-            if (type === 'fees') { renderFees(); renderCharts(); updateDashboard(); }
+            if (type === 'fees') { renderFees(); renderCharts(); updateDashboard(); renderStudents(); renderLedger(); }
             if (type === 'expenses') { renderExpenses(); updateDashboard(); }
             if (type === 'assets') renderAssets();
             opStop();
             showToast('Record deleted.', 'success');
         }
 
+        async function deleteStudent(studentId) {
+            const s = findStudent(studentId);
+            if (!s) return;
+            const relatedFees = feesForStudent(s.id, s.name).length;
+
+            const confirmed = await customConfirm(
+                `Delete ${s.name}?`,
+                relatedFees > 0
+                    ? `This student has ${relatedFees} fee record(s). Both the student and all related fee records will be permanently removed.`
+                    : 'This student will be permanently removed from the server.',
+                { okText: 'Delete Everything', cancelText: 'Keep it', variant: 'danger', icon: 'fa-triangle-exclamation' }
+            );
+            if (!confirmed) return;
+
+            opStart('Deleting student...', 'Removing student and related fee records');
+            appData.students = appData.students.filter(x => x.id !== s.id);
+            appData.fees = appData.fees.filter(f => !(f.studentId === s.id || (!f.studentId && f.studentName === s.name)));
+            await Promise.all([saveDataset('students'), saveDataset('fees')]);
+            refreshAll();
+            opStop();
+            showToast('Student deleted.', 'success');
+        }
+
         async function paySalary(index) {
             const staff = appData.staff[index];
             if (!staff) return;
-            const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-            const currentYear = new Date().getFullYear().toString();
+            const cm = currentMonthName(), cy = currentYearStr();
             const confirmed = await customConfirm(
                 'Confirm salary payment',
-                `Pay Rs. ${staff.salary} to ${staff.name} for ${currentMonth} ${currentYear}? This will also be added to Expenses.`,
+                `Pay Rs. ${money(staff.salary)} to ${staff.name} for ${cm} ${cy}? This will also be added to Expenses.`,
                 { okText: 'Pay Salary', cancelText: 'Cancel', variant: 'success', icon: 'fa-hand-holding-usd' }
             );
             if (!confirmed) return;
 
             opStart('Processing salary payment...', 'Saving salary + expense records');
             appData.salaryPayments.push({
-                staffIndex: index, name: staff.name, month: currentMonth, year: currentYear,
-                amount: staff.salary, date: new Date().toISOString().split('T')[0]
+                staffIndex: index, name: staff.name, month: cm, year: cy,
+                amount: staff.salary, date: todayISO()
             });
             appData.expenses.push({
-                date: new Date().toISOString().split('T')[0],
+                date: todayISO(),
                 category: 'Salary',
-                description: `Salary - ${staff.name} (${currentMonth} ${currentYear})`,
+                description: `Salary - ${staff.name} (${cm} ${cy})`,
                 amount: staff.salary,
                 method: 'Cash'
             });
@@ -1790,18 +2294,38 @@
                 { okText: 'Edit', cancelText: 'Cancel', variant: 'gold', icon: 'fa-pen-to-square' }
             );
             if (!confirmed) return;
+            openEditFeeForm(fee, index);
+        }
+
+        async function editFeeById(feeId) {
+            const idx = appData.fees.findIndex(f => f.id === feeId);
+            if (idx < 0) return;
+            const fee = appData.fees[idx];
+            closeModal('studentDetailModal');
+            openEditFeeForm(fee, idx);
+        }
+
+        function openEditFeeForm(fee, index) {
             openModal('feeModal');
             document.getElementById('feeModalTitle').textContent = 'Edit Fee';
             document.getElementById('feeSubmitBtn').textContent = 'Update Fee';
             document.getElementById('feeEditIndex').value = index;
             const form = document.getElementById('feeForm');
-            const sIdx = appData.students.findIndex(s => s.name === fee.studentName);
-            if (sIdx >= 0) form.studentId.value = sIdx;
+            const s = findStudent(fee.studentId) || findStudent(fee.studentName);
+            if (s) form.studentId.value = s.id;
             form.month.value = fee.month;
             form.year.value = fee.year;
             form.description.value = fee.description;
             form.amount.value = fee.amount;
             form.method.value = fee.method;
+            updateFeeBalanceHint();
+        }
+
+        async function deleteFeeById(feeId) {
+            const idx = appData.fees.findIndex(f => f.id === feeId);
+            if (idx < 0) return;
+            await deleteItem('fees', idx);
+            if (currentStudentId) renderStudentDetail();
         }
 
         async function handleLogout(e) {
@@ -1819,23 +2343,78 @@
         }
 
         /* =========================================================
+           COLLECT FEE HELPERS
+           ========================================================= */
+        function collectFor(studentId, month, year) {
+            openModal('feeModal');
+            const form = document.getElementById('feeForm');
+            form.reset();
+            document.getElementById('feeEditIndex').value = '';
+            document.getElementById('feeModalTitle').textContent = 'Collect Fee';
+            document.getElementById('feeSubmitBtn').textContent = 'Save & Generate Voucher';
+
+            populateStudentDropdown();
+            const s = findStudent(studentId);
+            if (s) form.studentId.value = s.id;
+            form.month.value = month || currentMonthName();
+            form.year.value = year || currentYearStr();
+            form.description.value = 'Monthly Fee';
+
+            const payable = monthlyPayable(s);
+            const paid = paidInMonth(s.id, s.name, form.month.value, form.year.value);
+            const balance = Math.max(0, payable - paid);
+            if (balance > 0) form.amount.value = Math.round(balance);
+            updateFeeBalanceHint();
+        }
+
+        function collectForCurrentStudent() {
+            const s = findStudent(currentStudentId);
+            if (!s) return;
+            closeModal('studentDetailModal');
+            collectFor(s.id, currentMonthName(), currentYearStr());
+        }
+
+        function updateFeeBalanceHint() {
+            const form = document.getElementById('feeForm');
+            const hint = document.getElementById('feeBalanceHint');
+            const s = findStudent(form.studentId.value);
+            const month = form.month.value;
+            const year = form.year.value;
+            if (!s || !month || !year) { hint.classList.add('hidden'); return; }
+            const payable = monthlyPayable(s);
+            const paid = paidInMonth(s.id, s.name, month, year);
+            const balance = Math.max(0, payable - paid);
+            hint.classList.remove('hidden');
+            hint.innerHTML = `<strong>${escapeHtml(s.name)}</strong> — ${escapeHtml(month)} ${escapeHtml(year)}: payable Rs. ${money(payable)}, already paid Rs. ${money(paid)}, <strong class="${balance > 0 ? 'text-red-600' : 'text-emerald-600'}">balance Rs. ${money(balance)}</strong>`;
+        }
+
+        document.querySelector('#feeForm select[name="studentId"]').addEventListener('change', updateFeeBalanceHint);
+        document.querySelector('#feeForm select[name="month"]').addEventListener('change', updateFeeBalanceHint);
+        document.querySelector('#feeForm input[name="year"]').addEventListener('input', updateFeeBalanceHint);
+
+        /* =========================================================
            VOUCHER & REPORTS
            ========================================================= */
-        function viewVoucher(index) {
-            const fee = appData.fees[index];
-            if (!fee) return;
+        function viewVoucher(feeId) {
+            let fee = appData.fees.find(f => f.id === feeId);
+            if (!fee && typeof feeId === 'number') fee = appData.fees[feeId];
+            if (!fee) { showToast('Fee record not found.', 'error'); return; }
+
             currentVoucherFee = fee;
             document.getElementById('reportOutput').classList.remove('hidden');
             document.getElementById('reportActions').classList.remove('hidden');
             document.getElementById('voucherPreview').classList.remove('hidden');
             document.getElementById('standardReportOutput').classList.add('hidden');
+
+            const idx = appData.fees.indexOf(fee);
             document.querySelector('.voucherDate').textContent = fee.date;
-            document.querySelector('.voucherNo').textContent = 'VCH-' + String(index + 1).padStart(4, '0');
+            document.querySelector('.voucherNo').textContent = 'VCH-' + String(idx + 1).padStart(4, '0');
             document.querySelector('.vStudent').textContent = fee.studentName;
-            const student = appData.students.find(s => s.name === fee.studentName);
+            const student = findStudent(fee.studentId) || findStudent(fee.studentName);
             document.querySelector('.vClass').textContent = student ? `Class ${student.class} ${student.section || ''}` : 'N/A';
-            document.getElementById('voucherItems').innerHTML = `<tr><td class="border p-1">${fee.description}</td><td class="border p-1">${fee.month} ${fee.year}</td><td class="border p-1 text-right">${fee.amount}</td></tr>`;
-            document.querySelector('.vTotal').textContent = fee.amount;
+            document.getElementById('voucherItems').innerHTML =
+                `<tr><td class="border p-1">${escapeHtml(fee.description)}</td><td class="border p-1">${escapeHtml(fee.month)} ${escapeHtml(fee.year)}</td><td class="border p-1 text-right">${money(fee.amount)}</td></tr>`;
+            document.querySelector('.vTotal').textContent = money(fee.amount);
             document.querySelector('.vMethod').textContent = fee.method;
             document.querySelector('.branchName').textContent = document.getElementById('branchDisplay').textContent;
         }
@@ -1848,32 +2427,83 @@
             const output = document.getElementById('standardReportOutput');
             output.classList.remove('hidden');
 
+            const month = document.getElementById('ledgerMonth').value;
+            const year = document.getElementById('ledgerYear').value;
+
             if (type === 'student_report') {
-                let html = '<h3 class="text-lg font-bold mb-3">Student Report</h3><table class="w-full border-collapse border text-sm"><thead class="bg-gray-100"><tr><th class="border p-2">Name</th><th class="border p-2">Class</th><th class="border p-2">Phone</th><th class="border p-2">Total Fee</th></tr></thead><tbody>';
-                appData.students.forEach(s => {
-                    const total = (parseFloat(s.fee) || 0) + (parseFloat(s.stationary) || 0) + (parseFloat(s.otherCharges) || 0) + (parseFloat(s.examFee) || 0) + (parseFloat(s.annualFee) || 0) + (parseFloat(s.books) || 0);
-                    html += `<tr><td class="border p-2">${s.name}</td><td class="border p-2">${s.class}</td><td class="border p-2">${s.phone || '-'}</td><td class="border p-2">Rs. ${total}</td></tr>`;
+                let html = '<h3 class="text-lg font-bold mb-3">Student Report — Fee Structure</h3><div class="overflow-x-auto"><table class="w-full border-collapse border text-xs"><thead class="bg-gray-100"><tr><th class="border p-2">Name</th><th class="border p-2">Class</th><th class="border p-2">Phone</th><th class="border p-2">Tuition</th><th class="border p-2">Stationary</th><th class="border p-2">Other</th><th class="border p-2">Discount</th><th class="border p-2">Monthly</th><th class="border p-2">One-Time</th><th class="border p-2">Paid (all)</th></tr></thead><tbody>';
+                appData.students.filter(s => s.status !== 'Deleted').forEach(s => {
+                    html += `<tr>
+                        <td class="border p-2">${escapeHtml(s.name)}</td>
+                        <td class="border p-2">${escapeHtml(s.class)}</td>
+                        <td class="border p-2">${escapeHtml(s.phone || '-')}</td>
+                        <td class="border p-2">${money(s.fee)}</td>
+                        <td class="border p-2">${money(s.stationary)}</td>
+                        <td class="border p-2">${money(s.otherCharges)}</td>
+                        <td class="border p-2">${money(s.discount)}</td>
+                        <td class="border p-2 font-semibold">${money(monthlyPayable(s))}</td>
+                        <td class="border p-2">${money(oneTimeDues(s))}</td>
+                        <td class="border p-2">${money(totalPaidLifetime(s.id, s.name))}</td>
+                    </tr>`;
                 });
-                html += '</tbody></table>';
+                html += '</tbody></table></div>';
                 output.innerHTML = html;
+
             } else if (type === 'fee_collection_report') {
-                let html = '<h3 class="text-lg font-bold mb-3">Fee Collection Report</h3><table class="w-full border-collapse border text-sm"><thead class="bg-gray-100"><tr><th class="border p-2">Date</th><th class="border p-2">Student</th><th class="border p-2">Month</th><th class="border p-2">Amount</th></tr></thead><tbody>';
+                let html = '<h3 class="text-lg font-bold mb-3">Fee Collection Report</h3><div class="overflow-x-auto"><table class="w-full border-collapse border text-sm"><thead class="bg-gray-100"><tr><th class="border p-2">Date</th><th class="border p-2">Student</th><th class="border p-2">Period</th><th class="border p-2">Description</th><th class="border p-2">Method</th><th class="border p-2 text-right">Amount</th></tr></thead><tbody>';
                 let total = 0;
-                appData.fees.forEach(f => { total += parseFloat(f.amount); html += `<tr><td class="border p-2">${f.date}</td><td class="border p-2">${f.studentName}</td><td class="border p-2">${f.month}</td><td class="border p-2">Rs. ${f.amount}</td></tr>`; });
-                html += `<tr class="font-bold"><td colspan="3" class="border p-2 text-right">Total:</td><td class="border p-2">Rs. ${total}</td></tr></tbody></table>`;
+                appData.fees.slice().sort((a, b) => (a.date || '').localeCompare(b.date || '')).forEach(f => {
+                    total += num(f.amount);
+                    html += `<tr><td class="border p-2">${escapeHtml(f.date)}</td><td class="border p-2">${escapeHtml(f.studentName)}</td><td class="border p-2">${escapeHtml(f.month)} ${escapeHtml(f.year)}</td><td class="border p-2">${escapeHtml(f.description)}</td><td class="border p-2">${escapeHtml(f.method)}</td><td class="border p-2 text-right">${money(f.amount)}</td></tr>`;
+                });
+                html += `<tr class="font-bold bg-yellow-50"><td colspan="5" class="border p-2 text-right">Total:</td><td class="border p-2 text-right">Rs. ${money(total)}</td></tr></tbody></table></div>`;
                 output.innerHTML = html;
+
+            } else if (type === 'monthly_ledger_report') {
+                const rows = buildLedgerRows(month, year);
+                let html = `<h3 class="text-lg font-bold mb-1">Monthly Ledger — ${escapeHtml(month)} ${escapeHtml(year)}</h3>
+                    <p class="text-xs text-gray-500 mb-3">Branch: ${escapeHtml(appMeta.branch || DEFAULT_BRANCH)}</p>
+                    <div class="overflow-x-auto"><table class="w-full border-collapse border text-xs"><thead class="bg-gray-100"><tr><th class="border p-2">Student</th><th class="border p-2">Class</th><th class="border p-2">Father</th><th class="border p-2 text-right">Payable</th><th class="border p-2 text-right">Paid</th><th class="border p-2 text-right">Balance</th><th class="border p-2">Status</th></tr></thead><tbody>`;
+                let tp = 0, tpd = 0, tb = 0;
+                rows.forEach(r => {
+                    tp += r.payable; tpd += r.paid; tb += r.balance;
+                    html += `<tr><td class="border p-2">${escapeHtml(r.s.name)}</td><td class="border p-2">${escapeHtml(r.s.class)}</td><td class="border p-2">${escapeHtml(r.s.fatherName)}</td><td class="border p-2 text-right">${money(r.payable)}</td><td class="border p-2 text-right">${money(r.paid)}</td><td class="border p-2 text-right">${money(r.balance)}</td><td class="border p-2">${r.st}</td></tr>`;
+                });
+                html += `<tr class="font-bold bg-yellow-50"><td colspan="3" class="border p-2 text-right">Totals:</td><td class="border p-2 text-right">${money(tp)}</td><td class="border p-2 text-right">${money(tpd)}</td><td class="border p-2 text-right">${money(tb)}</td><td class="border p-2"></td></tr></tbody></table></div>`;
+                output.innerHTML = html;
+
+            } else if (type === 'outstanding_report') {
+                const rows = buildLedgerRows(month, year).filter(r => r.balance > 0).sort((a, b) => b.balance - a.balance);
+                let html = `<h3 class="text-lg font-bold mb-1">Outstanding Students — ${escapeHtml(month)} ${escapeHtml(year)}</h3>
+                    <p class="text-xs text-gray-500 mb-3">${rows.length} student(s) with unpaid balance</p>
+                    <div class="overflow-x-auto"><table class="w-full border-collapse border text-xs"><thead class="bg-gray-100"><tr><th class="border p-2">Student</th><th class="border p-2">Class</th><th class="border p-2">Father</th><th class="border p-2">Phone</th><th class="border p-2 text-right">Payable</th><th class="border p-2 text-right">Paid</th><th class="border p-2 text-right">Balance</th></tr></thead><tbody>`;
+                let tb = 0;
+                rows.forEach(r => {
+                    tb += r.balance;
+                    html += `<tr><td class="border p-2">${escapeHtml(r.s.name)}</td><td class="border p-2">${escapeHtml(r.s.class)}</td><td class="border p-2">${escapeHtml(r.s.fatherName)}</td><td class="border p-2">${escapeHtml(r.s.phone || '-')}</td><td class="border p-2 text-right">${money(r.payable)}</td><td class="border p-2 text-right">${money(r.paid)}</td><td class="border p-2 text-right font-bold">${money(r.balance)}</td></tr>`;
+                });
+                html += `<tr class="font-bold bg-red-50"><td colspan="6" class="border p-2 text-right">Total Outstanding:</td><td class="border p-2 text-right">Rs. ${money(tb)}</td></tr></tbody></table></div>`;
+                output.innerHTML = html;
+
             } else if (type === 'financial_summary') {
-                const income = appData.fees.reduce((s, f) => s + parseFloat(f.amount), 0);
-                const expense = appData.expenses.reduce((s, e) => s + parseFloat(e.amount), 0);
+                const income = appData.fees.reduce((s, f) => s + num(f.amount), 0);
+                const expense = appData.expenses.reduce((s, e) => s + num(e.amount), 0);
+                const monthIncome = appData.fees.filter(f => f.month === month && String(f.year) === year).reduce((s, f) => s + num(f.amount), 0);
                 output.innerHTML = `<h3 class="text-lg font-bold mb-3">Financial Summary</h3>
-                    <div class="grid grid-cols-3 gap-4 text-center text-sm">
-                        <div class="bg-green-100 p-3 rounded-lg"><h4 class="font-bold">Income</h4><p class="text-xl text-green-700">Rs. ${income}</p></div>
-                        <div class="bg-red-100 p-3 rounded-lg"><h4 class="font-bold">Expenses</h4><p class="text-xl text-red-700">Rs. ${expense}</p></div>
-                        <div class="bg-blue-100 p-3 rounded-lg"><h4 class="font-bold">Net</h4><p class="text-xl text-blue-700">Rs. ${income - expense}</p></div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                        <div class="bg-green-100 p-4 rounded-lg"><h4 class="font-bold text-xs uppercase text-green-800">Total Income</h4><p class="text-xl text-green-700 font-bold">Rs. ${money(income)}</p></div>
+                        <div class="bg-red-100 p-4 rounded-lg"><h4 class="font-bold text-xs uppercase text-red-800">Total Expenses</h4><p class="text-xl text-red-700 font-bold">Rs. ${money(expense)}</p></div>
+                        <div class="bg-blue-100 p-4 rounded-lg"><h4 class="font-bold text-xs uppercase text-blue-800">Net Position</h4><p class="text-xl text-blue-700 font-bold">Rs. ${money(income - expense)}</p></div>
+                        <div class="bg-yellow-100 p-4 rounded-lg"><h4 class="font-bold text-xs uppercase text-yellow-800">${escapeHtml(month)} ${escapeHtml(year)}</h4><p class="text-xl text-yellow-800 font-bold">Rs. ${money(monthIncome)}</p></div>
                     </div>`;
+
             } else if (type === 'voucher') {
-                if (appData.fees.length > 0) viewVoucher(appData.fees.length - 1);
-                else showToast('No fee records to generate voucher.', 'error');
+                if (appData.fees.length > 0) {
+                    const last = appData.fees[appData.fees.length - 1];
+                    viewVoucher(last.id);
+                } else {
+                    showToast('No fee records to generate voucher.', 'error');
+                }
             }
         }
 
@@ -1885,14 +2515,14 @@
             opStart(`Exporting as ${format.toUpperCase()}...`, 'Rendering document');
             try {
                 if (format === 'png') {
-                    const canvas = await html2canvas(element, { scale: 2 });
+                    const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#ffffff' });
                     const link = document.createElement('a');
                     link.download = `Dar-E-Arqam-Report-${Date.now()}.png`;
                     link.href = canvas.toDataURL();
                     link.click();
                 } else if (format === 'pdf') {
                     const { jsPDF } = window.jspdf;
-                    const canvas = await html2canvas(element, { scale: 2 });
+                    const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#ffffff' });
                     const imgData = canvas.toDataURL('image/png');
                     const pdf = new jsPDF('p', 'mm', 'a4');
                     const imgWidth = 210;
@@ -1911,7 +2541,7 @@
 
         function sendWhatsAppVoucher() {
             if (!currentVoucherFee) return;
-            const student = appData.students.find(s => s.name === currentVoucherFee.studentName);
+            const student = findStudent(currentVoucherFee.studentId) || findStudent(currentVoucherFee.studentName);
             const phone = student ? student.phone : '';
             if (!phone) { showToast('No WhatsApp number saved for this student.', 'error'); return; }
             const cleanPhone = phone.replace(/\D/g, '');
@@ -1923,17 +2553,18 @@
            SETTINGS
            ========================================================= */
         async function updateBranch() {
-            const newBranch = document.getElementById('branchInput').value.trim() || 'Tamboli Campus';
+            const newBranch = document.getElementById('branchInput').value.trim() || DEFAULT_BRANCH;
             appMeta.branch = newBranch;
             document.getElementById('branchDisplay').textContent = newBranch;
             document.querySelectorAll('.branchName').forEach(el => el.textContent = newBranch);
-            opStart('Updating branch...', 'POST /drq/save → meta.json');
+            opStart('Updating branch...', `POST /${API_PREFIX}/save → meta.json`);
             const ok = await apiSave(FILES.meta, appMeta);
             opStop();
             showToast(ok ? 'Branch name updated.' : 'Failed to save branch.', ok ? 'success' : 'error');
         }
         function downloadBackup() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+            const payload = Object.assign({}, appData, { __meta: appMeta });
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload));
             const a = document.createElement('a');
             a.href = dataStr;
             a.download = `Dar-E-Arqam_Backup_${Date.now()}.json`;
@@ -1948,13 +2579,25 @@
                 try {
                     opStart('Restoring backup...', 'Writing to server');
                     const parsed = JSON.parse(e.target.result);
-                    appData = { ...appData, ...parsed };
-                    const keys = ['students', 'staff', 'fees', 'expenses', 'assets', 'salaryPayments'];
-                    await Promise.all(keys.map(k => saveDataset(k)));
+                    const meta = parsed.__meta;
+                    delete parsed.__meta;
+
+                    appData = Object.assign({}, appData, parsed);
+                    if (meta && typeof meta === 'object') appMeta = meta;
+
+                    appData.students = normalizeStudents(appData.students || []);
+                    appData.fees = normalizeFees(appData.fees || [], appData.students);
+                    appData.staff = appData.staff || [];
+                    appData.expenses = appData.expenses || [];
+                    appData.assets = appData.assets || [];
+                    appData.salaryPayments = appData.salaryPayments || [];
+
+                    await saveEverything();
                     await loadAllData();
                     opStop();
                     showToast('Backup restored.', 'success');
                 } catch (err) {
+                    console.error(err);
                     opStop();
                     showToast('Invalid backup file.', 'error');
                 }
@@ -1963,12 +2606,43 @@
         }
 
         /* =========================================================
+           SELECT POPULATION
+           ========================================================= */
+        function fillSelect(el, options, selected) {
+            if (!el) return;
+            el.innerHTML = options.map(o => `<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`).join('');
+            if (selected !== undefined) el.value = selected;
+        }
+
+        function initSelectors() {
+            const monthOptions = [{ value: 'All', label: 'All Months' }].concat(MONTHS.map(m => ({ value: m, label: m })));
+            const monthOptionsNoAll = MONTHS.map(m => ({ value: m, label: m }));
+            const yearOptions = [{ value: 'All', label: 'All Years' }];
+            const yearOptionsNoAll = [];
+            const nowY = new Date().getFullYear();
+            for (let y = nowY + 1; y >= nowY - 4; y--) {
+                yearOptions.push({ value: String(y), label: String(y) });
+                yearOptionsNoAll.push({ value: String(y), label: String(y) });
+            }
+
+            fillSelect(document.getElementById('studentMonth'), monthOptionsNoAll, currentMonthName());
+            fillSelect(document.getElementById('studentYear'), yearOptionsNoAll, currentYearStr());
+            fillSelect(document.getElementById('ledgerMonth'), monthOptionsNoAll, currentMonthName());
+            fillSelect(document.getElementById('ledgerYear'), yearOptionsNoAll, currentYearStr());
+            fillSelect(document.getElementById('filterFeeMonth'), monthOptions, 'All');
+            fillSelect(document.getElementById('filterFeeYear'), yearOptions, 'All');
+        }
+
+        /* =========================================================
            INIT
            ========================================================= */
         document.addEventListener('DOMContentLoaded', async () => {
-            document.getElementById('branchDisplay').textContent = 'Tamboli Campus';
-            document.getElementById('branchInput').value = 'Tamboli Campus';
-            document.querySelectorAll('.branchName').forEach(el => el.textContent = 'Tamboli Campus');
+            document.getElementById('branchDisplay').textContent = DEFAULT_BRANCH;
+            document.getElementById('branchInput').value = DEFAULT_BRANCH;
+            document.querySelectorAll('.branchName').forEach(el => el.textContent = DEFAULT_BRANCH);
+
+            initSelectors();
+            updateStudentFormPreview();
 
             const minDelay = new Promise(res => setTimeout(res, 2400));
             const dataLoad = loadAllData();
